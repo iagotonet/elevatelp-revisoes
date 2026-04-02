@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisão de Landing Page</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root{--red:#f94051;--rs:rgba(249,64,81,0.08);--bg:#f8f8fc;--s:#ffffff;--s2:#f4f4f8;--b:#e8e8f0;--t:#1a1a2e;--t2:#4a4a6a;--t3:#9090a8;--g:#00c47a;--amber:#f5a623}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
+header{background:white;border-bottom:1px solid var(--b);padding:14px 24px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,#f94051,#ff2040);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;font-family:'Space Grotesk',sans-serif}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--t)}
+.progress-container{margin-left:auto;display:flex;align-items:center;gap:10px}
+.progress-text{font-size:12px;color:var(--t3)}
+.progress-bar{width:120px;height:6px;background:var(--b);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b78);border-radius:3px;transition:width .4s ease}
+.container{max-width:680px;margin:0 auto;padding:28px 20px}
+.dobra-header{text-align:center;margin-bottom:28px}
+.dobra-num{font-size:12px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.dobra-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--t);margin-bottom:8px}
+.dobra-sub{font-size:14px;color:var(--t2)}
+.preview-box{background:white;border:1px solid var(--b);border-radius:14px;overflow:hidden;margin-bottom:24px}
+.preview-header{background:var(--s2);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--b)}
+.preview-dots{display:flex;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
+.preview-url{font-size:11px;color:var(--t3);flex:1;text-align:center}
+.preview-content{padding:20px;background:var(--s2)}
+.texto-preview{background:white;border:1px solid var(--b);border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:border-color .2s}
+.texto-preview:hover{border-color:var(--red)}
+.texto-val{font-size:13px;color:var(--t);flex:1}
+.texto-badge{font-size:10px;font-weight:600;color:var(--t3);background:var(--s2);padding:2px 6px;border-radius:4px;white-space:nowrap}
+.section-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.card{background:white;border:1px solid var(--b);border-radius:14px;padding:20px;margin-bottom:16px}
+.alt-list{margin-bottom:16px}
+.alt-item{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;margin-bottom:8px;position:relative}
+.alt-tipo-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-bottom:8px;display:inline-block}
+.badge-texto{background:rgba(79,142,247,0.1);color:#4f8ef7}
+.badge-cor{background:rgba(245,166,35,0.1);color:var(--amber)}
+.badge-imagem{background:rgba(0,196,122,0.1);color:var(--g)}
+.badge-obs{background:var(--rs);color:var(--red)}
+.alt-remove{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px}
+.alt-remove:hover{background:var(--b);color:var(--t)}
+.add-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.add-btn{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;background:white;border:1.5px solid var(--b);color:var(--t2);transition:all .15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.add-btn:hover{border-color:var(--red);color:var(--red);background:var(--rs)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:white;border-radius:16px;padding:24px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.modal-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:16px}
+label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:9px;padding:10px 13px;color:var(--t);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+input:focus,textarea:focus{border-color:var(--red)}
+.modal-footer{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.btn-primary{padding:11px 22px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,var(--red),#d92d3e);color:#fff;transition:all .2s}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-secondary{padding:10px 18px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;background:var(--s2);border:1px solid var(--b);color:var(--t2);transition:all .15s}
+.btn-secondary:hover{background:var(--b)}
+.nav-buttons{display:flex;gap:10px;margin-top:24px}
+.nav-buttons .btn-secondary{flex:1;text-align:center}
+.nav-buttons .btn-primary{flex:2;text-align:center}
+.color-preview{width:24px;height:24px;border-radius:5px;border:1px solid var(--b);flex-shrink:0}
+.hidden{display:none}
+.finalizado{text-align:center;padding:60px 20px}
+.finalizado-icon{font-size:64px;margin-bottom:20px}
+.finalizado-title{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--t);margin-bottom:10px}
+.finalizado-sub{font-size:15px;color:var(--t2);line-height:1.7}
+.loading{text-align:center;padding:60px 20px;color:var(--t2)}
+.loading-icon{font-size:48px;margin-bottom:16px;animation:spin 2s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-icon">E</div>
+  <span class="logo-name">Revisão de Landing Page</span>
+  <div class="progress-container">
+    <span class="progress-text" id="progressText">0 / 0</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div id="loading" class="loading">
+    <div class="loading-icon">⏳</div>
+    <div>Carregando...</div>
+  </div>
+
+  <div id="app" class="hidden">
+
+    <!-- DOBRA ATUAL -->
+    <div id="view-dobra">
+      <div class="dobra-header">
+        <div class="dobra-num" id="dobraNum">Dobra 1</div>
+        <div class="dobra-title" id="dobraTitle"></div>
+        <div class="dobra-sub">Faça suas anotações para esta seção da página</div>
+      </div>
+
+      <!-- Preview dos textos atuais -->
+      <div class="preview-box" id="previewBox">
+        <div class="preview-header">
+          <div class="preview-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <div class="preview-url" id="previewUrl">Textos desta seção</div>
+        </div>
+        <div class="preview-content" id="previewContent"></div>
+      </div>
+
+      <!-- Anotações -->
+      <div class="card">
+        <div class="section-title">✏️ Suas anotações para esta dobra</div>
+
+        <div class="alt-list" id="altList">
+          <div id="altEmpty" style="text-align:center;padding:20px;color:var(--t3);font-size:13px">Nenhuma anotação ainda. Clique em um botão abaixo para adicionar.</div>
+        </div>
+
+        <div class="add-buttons">
+          <button class="add-btn" onclick="abrirModal('texto')">💬 Trocar texto</button>
+          <button class="add-btn" onclick="abrirModal('cor')">🎨 Mudar cor</button>
+          <button class="add-btn" onclick="abrirModal('imagem')">🖼️ Trocar imagem</button>
+          <button class="add-btn" onclick="abrirModal('obs')">📝 Observação livre</button>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn-secondary" onclick="voltarDobra()" id="btnVoltar">← Anterior</button>
+          <button class="btn-primary" onclick="proximaDobra()" id="btnProximo">Próxima dobra →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINALIZADO -->
+    <div id="view-finalizado" class="hidden">
+      <div class="finalizado">
+        <div class="finalizado-icon">🎉</div>
+        <div class="finalizado-title">Revisão enviada!</div>
+        <div class="finalizado-sub">Suas anotações foram salvas com sucesso.<br>O desenvolvedor vai processar tudo e aplicar as alterações em breve.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL DE ANOTAÇÃO -->
+<div id="modal" class="modal-overlay hidden" onclick="fecharModalFora(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Adicionar anotação</div>
+    <div id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-primary" onclick="salvarAnotacao()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let sessao = null;
+let dobraAtual = 0;
+let anotacoesPorDobra = {}; // { dobraNumero: [alteracoes] }
+let tipoModal = '';
+
+// Buscar sessão
+async function iniciar() {
+  const params = new URLSearchParams(window.location.search);
+  const sessaoId = params.get('s');
+  if (!sessaoId) {
+    document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:60px;color:#666"><div style="font-size:48px;margin-bottom:16px">❌</div><div>Link inválido. Peça um novo link para o desenvolvedor.</div></div>';
+    return;
+  }
+  try {
+    const res = await fetch('/api/sessao?id=' + sessaoId);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    sessao = data.sessao;
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    renderDobra();
+  } catch(e) {
+    document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:60px;color:#666"><div style="font-size:48px;margin-bottom:16px">❌</div><div>Sessão não encontrada. Peça um novo link.</div></div>';
+  }
+}
+
+function renderDobra() {
+  const dobra = sessao.dobras[dobraAtual];
+  if (!dobra) return;
+
+  const total = sessao.dobras.length;
+  const atual = dobraAtual + 1;
+  document.getElementById('progressText').textContent = atual + ' / ' + total;
+  document.getElementById('progressFill').style.width = (atual / total * 100) + '%';
+  document.getElementById('dobraNum').textContent = 'Dobra ' + atual + ' de ' + total;
+  document.getElementById('dobraTitle').textContent = dobra.titulo || ('Dobra ' + atual);
+  document.getElementById('btnVoltar').style.display = dobraAtual === 0 ? 'none' : '';
+
+  const isUltima = dobraAtual === total - 1;
+  document.getElementById('btnProximo').textContent = isUltima ? '✅ Finalizar e enviar' : 'Próxima dobra →';
+  document.getElementById('btnProximo').style.background = isUltima ? 'linear-gradient(135deg,var(--g),#00a066)' : '';
+
+  if (sessao.pageUrl) {
+    document.getElementById('previewUrl').textContent = sessao.pageUrl;
+  }
+
+  // Mostrar textos da dobra
+  const content = document.getElementById('previewContent');
+  if (dobra.textos && dobra.textos.length > 0) {
+    content.innerHTML = dobra.textos.map(t =>
+      '<div class="texto-preview">' +
+        '<div class="texto-val">' + t + '</div>' +
+        '<span class="texto-badge">Atual</span>' +
+      '</div>'
+    ).join('');
+  } else {
+    content.innerHTML = '<div style="text-align:center;color:var(--t3);padding:20px;font-size:13px">Visualize a página ao lado para ver esta seção</div>';
+  }
+
+  // Renderizar anotações desta dobra
+  renderAnotacoes();
+}
+
+function renderAnotacoes() {
+  const dobraNum = dobraAtual + 1;
+  const alts = anotacoesPorDobra[dobraNum] || [];
+  const list = document.getElementById('altList');
+  const empty = document.getElementById('altEmpty');
+
+  if (alts.length === 0) {
+    if (empty) empty.style.display = 'block';
+    // Remover itens anteriores
+    Array.from(list.children).forEach(c => { if (c.id !== 'altEmpty') c.remove(); });
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  // Manter apenas o empty e recriar
+  Array.from(list.children).forEach(c => { if (c.id !== 'altEmpty') c.remove(); });
+
+  alts.forEach((alt, i) => {
+    const div = document.createElement('div');
+    div.className = 'alt-item';
+    let badgeClass = 'badge-obs';
+    let badgeText = 'Observação';
+    let content = '';
+
+    if (alt.tipo === 'texto') {
+      badgeClass = 'badge-texto'; badgeText = '💬 Texto';
+      content = '<div style="font-size:12px;color:var(--t3);margin-bottom:4px">DE: "' + alt.de + '"</div>' +
+                '<div style="font-size:13px;color:var(--t);font-weight:500">PARA: "' + alt.para + '"</div>';
+    } else if (alt.tipo === 'cor') {
+      badgeClass = 'badge-cor'; badgeText = '🎨 Cor';
+      content = '<div style="display:flex;align-items:center;gap:8px">' +
+        '<div class="color-preview" style="background:' + alt.cor + '"></div>' +
+        '<div style="font-size:13px;color:var(--t)">' + alt.campo + ': ' + alt.cor + '</div>' +
+      '</div>';
+    } else if (alt.tipo === 'imagem') {
+      badgeClass = 'badge-imagem'; badgeText = '🖼️ Imagem';
+      content = '<div style="font-size:13px;color:var(--t)">' + alt.descricao + '</div>';
+    } else {
+      content = '<div style="font-size:13px;color:var(--t)">' + alt.texto + '</div>';
+    }
+
+    div.innerHTML = '<button class="alt-remove" onclick="removerAlt(' + i + ')">×</button>' +
+      '<span class="alt-tipo-badge ' + badgeClass + '">' + badgeText + '</span>' + content;
+    list.appendChild(div);
+  });
+}
+
+function removerAlt(idx) {
+  const dobraNum = dobraAtual + 1;
+  anotacoesPorDobra[dobraNum] = (anotacoesPorDobra[dobraNum] || []).filter((_, i) => i !== idx);
+  renderAnotacoes();
+}
+
+// Modal
+function abrirModal(tipo) {
+  tipoModal = tipo;
+  const titles = { texto: '💬 Trocar texto', cor: '🎨 Mudar cor', imagem: '🖼️ Trocar imagem', obs: '📝 Observação livre' };
+  document.getElementById('modalTitle').textContent = titles[tipo];
+
+  const dobra = sessao.dobras[dobraAtual];
+  const textoOptions = (dobra.textos || []).map((t, i) =>
+    '<option value="' + t.replace(/"/g, '&quot;') + '">' + t.substring(0, 60) + (t.length > 60 ? '...' : '') + '</option>'
+  ).join('');
+
+  let body = '';
+  if (tipo === 'texto') {
+    body = '<div style="margin-bottom:12px"><label>Texto atual (selecione ou cole)</label>' +
+      (textoOptions ? '<select id="m_de" style="margin-bottom:8px"><option value="">Selecione um texto</option>' + textoOptions + '</select>' : '') +
+      '<input type="text" id="m_de_custom" placeholder="Ou cole o texto atual aqui..." /></div>' +
+      '<div><label>Novo texto</label><textarea id="m_para" rows="3" placeholder="Digite o novo texto..."></textarea></div>';
+  } else if (tipo === 'cor') {
+    body = '<div style="margin-bottom:12px"><label>Qual elemento mudar?</label>' +
+      '<input type="text" id="m_campo" placeholder="Ex: fundo do botão, cor do título, background da seção..." /></div>' +
+      '<div><label>Nova cor</label><div style="display:flex;gap:8px">' +
+      '<input type="color" id="m_cor_picker" style="width:48px;height:40px;border-radius:8px;padding:2px;cursor:pointer;flex-shrink:0" />' +
+      '<input type="text" id="m_cor" placeholder="#f94051 ou rgba(249,64,81,1)" /></div></div>';
+  } else if (tipo === 'imagem') {
+    body = '<div><label>Descreva a troca de imagem</label>' +
+      '<textarea id="m_img" rows="3" placeholder="Ex: Trocar a foto do hero pela foto do produto. A nova imagem é uma foto de uma mulher sorrindo..."></textarea></div>';
+  } else {
+    body = '<div><label>Sua observação</label>' +
+      '<textarea id="m_obs" rows="4" placeholder="Escreva qualquer observação sobre esta dobra..."></textarea></div>';
+  }
+
+  document.getElementById('modalBody').innerHTML = body;
+
+  // Sincronizar color picker com input text
+  if (tipo === 'cor') {
+    setTimeout(() => {
+      const picker = document.getElementById('m_cor_picker');
+      const text = document.getElementById('m_cor');
+      picker.addEventListener('input', () => { text.value = picker.value; });
+      text.addEventListener('input', () => { if (/^#[0-9a-fA-F]{6}$/.test(text.value)) picker.value = text.value; });
+    }, 50);
+
+    // Sincronizar select com input
+    setTimeout(() => {
+      const sel = document.getElementById('m_de');
+      const inp = document.getElementById('m_de_custom');
+      if (sel && inp) sel.addEventListener('change', () => { inp.value = sel.value; });
+    }, 50);
+  }
+
+  if (tipo === 'texto') {
+    setTimeout(() => {
+      const sel = document.getElementById('m_de');
+      const inp = document.getElementById('m_de_custom');
+      if (sel && inp) sel.addEventListener('change', () => { inp.value = sel.value; });
+    }, 50);
+  }
+
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+function fecharModal() {
+  document.getElementById('modal').classList.add('hidden');
+}
+
+function fecharModalFora(e) {
+  if (e.target === document.getElementById('modal')) fecharModal();
+}
+
+function salvarAnotacao() {
+  const dobraNum = dobraAtual + 1;
+  if (!anotacoesPorDobra[dobraNum]) anotacoesPorDobra[dobraNum] = [];
+
+  let alt = null;
+  if (tipoModal === 'texto') {
+    const de = document.getElementById('m_de_custom')?.value.trim() || document.getElementById('m_de')?.value.trim() || '';
+    const para = document.getElementById('m_para')?.value.trim() || '';
+    if (!de || !para) { alert('Preencha o texto atual e o novo texto'); return; }
+    alt = { tipo: 'texto', de, para };
+  } else if (tipoModal === 'cor') {
+    const campo = document.getElementById('m_campo')?.value.trim() || '';
+    const cor = document.getElementById('m_cor')?.value.trim() || '';
+    if (!campo || !cor) { alert('Preencha o elemento e a cor'); return; }
+    alt = { tipo: 'cor', campo, cor };
+  } else if (tipoModal === 'imagem') {
+    const descricao = document.getElementById('m_img')?.value.trim() || '';
+    if (!descricao) { alert('Descreva a troca de imagem'); return; }
+    alt = { tipo: 'imagem', descricao };
+  } else {
+    const texto = document.getElementById('m_obs')?.value.trim() || '';
+    if (!texto) { alert('Escreva sua observação'); return; }
+    alt = { tipo: 'obs', texto };
+  }
+
+  anotacoesPorDobra[dobraNum].push(alt);
+  fecharModal();
+  renderAnotacoes();
+}
+
+async function salvarDobra() {
+  const dobraNum = dobraAtual + 1;
+  const revisoes = anotacoesPorDobra[dobraNum] || [];
+
+  await fetch('/api/revisar-dobra', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessaoId: sessao.id, dobraNumero: dobraNum, revisoes })
+  });
+}
+
+async function proximaDobra() {
+  await salvarDobra();
+
+  if (dobraAtual >= sessao.dobras.length - 1) {
+    // Finalizar
+    await fetch('/api/finalizar-revisao', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessaoId: sessao.id })
+    });
+    document.getElementById('view-dobra').classList.add('hidden');
+    document.getElementById('view-finalizado').classList.remove('hidden');
+    document.getElementById('progressFill').style.width = '100%';
+    return;
+  }
+
+  dobraAtual++;
+  renderDobra();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function voltarDobra() {
+  await salvarDobra();
+  if (dobraAtual > 0) { dobraAtual--; renderDobra(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+
+iniciar();
+</script>
+</body>
+</html>

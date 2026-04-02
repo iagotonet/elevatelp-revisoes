@@ -1,0 +1,12 @@
+{
+  "name": "elevatelp-revisoes",
+  "version": "1.0.0",
+  "description": "ElevateLP Revisões — App de revisão de landing pages",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

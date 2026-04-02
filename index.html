@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElevateLP Revisões — Painel</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root{--red:#f94051;--red2:#ff6b78;--rg:rgba(249,64,81,0.3);--rs:rgba(249,64,81,0.08);--bg:#080810;--s:#111120;--s2:#161628;--b:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.12);--t:#f0f0ff;--t2:#a0a0c0;--t3:#606080;--g:#00e5a0;--gg:rgba(0,229,160,0.25);--amber:#f5a623;--ag:rgba(245,166,35,0.25);--blue:#4f8ef7;--bg2:#0d0d1a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(249,64,81,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(249,64,81,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(249,64,81,0.1) 0%,transparent 70%);pointer-events:none;z-index:0}
+header{position:relative;z-index:10;border-bottom:1px solid var(--b);padding:0 32px;display:flex;align-items:center;height:58px;background:rgba(8,8,16,0.8);backdrop-filter:blur(20px)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--red),#ff2040);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;font-family:'Space Grotesk',sans-serif;box-shadow:0 0 20px var(--rg)}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px}
+.logo-badge{font-size:10px;font-weight:500;color:var(--amber);background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:4px;padding:2px 6px;margin-left:2px;text-transform:uppercase;letter-spacing:.5px}
+.header-status{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t3)}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--gg);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.container{max-width:1000px;margin:0 auto;padding:32px 24px;position:relative;z-index:1}
+.page-header{margin-bottom:28px;display:flex;align-items:center;justify-content:space-between}
+.page-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600}
+.page-sub{font-size:13px;color:var(--t3);margin-top:4px}
+.btn-primary{padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;font-family:'Space Grotesk',sans-serif;cursor:pointer;border:none;background:linear-gradient(135deg,var(--red),#d92d3e);color:#fff;transition:all .2s;box-shadow:0 4px 20px rgba(249,64,81,0.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(249,64,81,0.4)}
+.btn-secondary{padding:9px 18px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;background:transparent;border:1px solid var(--b2);color:var(--t2);transition:all .15s;font-family:'Inter',sans-serif}
+.btn-secondary:hover{background:var(--s2);color:var(--t)}
+.btn-green{padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,var(--g),#00c47a);color:#000;transition:all .2s;box-shadow:0 4px 20px var(--gg)}
+.btn-green:hover{transform:translateY(-1px)}
+.btn-amber{padding:9px 18px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,var(--amber),#d4870a);color:#000;transition:all .2s}
+.card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:24px;margin-bottom:16px;transition:border-color .2s}
+.card:hover{border-color:var(--b2)}
+label{font-size:11px;font-weight:500;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:8px}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:11px 14px;color:var(--t);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249,64,81,0.1)}
+.drop-zone{border:1.5px dashed rgba(249,64,81,0.2);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(249,64,81,0.02)}
+.drop-zone:hover,.drop-zone.over{border-color:var(--red);background:var(--rs)}
+.drop-zone.loaded{border-color:var(--g);background:rgba(0,229,160,0.04);border-style:solid}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sessao-card{background:var(--s2);border:1px solid var(--b);border-radius:12px;padding:18px 20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:16px;margin-bottom:10px}
+.sessao-card:hover{border-color:var(--red);background:rgba(249,64,81,0.04)}
+.sessao-avatar{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--red),#d92d3e);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
+.sessao-info{flex:1}
+.sessao-nome{font-size:14px;font-weight:600;color:var(--t)}
+.sessao-meta{font-size:12px;color:var(--t3);margin-top:3px}
+.badge{display:inline-flex;align-items:center;font-size:11px;padding:3px 9px;border-radius:5px;font-weight:600;white-space:nowrap}
+.badge-green{background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--g)}
+.badge-amber{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);color:var(--amber)}
+.badge-red{background:var(--rs);border:1px solid rgba(249,64,81,0.2);color:var(--red)}
+.badge-gray{background:var(--s);border:1px solid var(--b2);color:var(--t3)}
+.badge-blue{background:rgba(79,142,247,0.08);border:1px solid rgba(79,142,247,0.2);color:var(--blue)}
+.alert{border-radius:10px;padding:11px 16px;font-size:13px;margin-bottom:14px;display:none}
+.alert.show{display:block}
+.alert-err{background:rgba(249,64,81,0.08);border:1px solid rgba(249,64,81,0.2);color:#ff8090}
+.hidden{display:none}
+.revisao-item{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.revisao-dobra-title{font-size:13px;font-weight:600;color:var(--amber);margin-bottom:10px}
+.rev-alt{background:var(--s2);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px}
+.rev-de{color:var(--t3);font-size:12px;margin-bottom:4px}
+.rev-para{color:var(--t);font-weight:500}
+.pendencia-item{background:rgba(249,64,81,0.04);border:1px solid rgba(249,64,81,0.15);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.pendencia-tipo{font-size:11px;font-weight:600;color:var(--red);margin-bottom:5px}
+.pendencia-desc{font-size:13px;color:var(--t)}
+.pendencia-detalhe{font-size:12px;color:var(--t3);margin-top:4px}
+.result-box{background:linear-gradient(135deg,rgba(0,229,160,0.06),rgba(0,229,160,0.02));border:1px solid rgba(0,229,160,0.2);border-radius:16px;padding:28px;text-align:center;margin-bottom:16px}
+.link-box{background:var(--s2);border:1px solid rgba(249,64,81,0.2);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:10px;margin-top:12px}
+.link-text{flex:1;font-size:13px;color:var(--t);font-family:'Space Grotesk',sans-serif;word-break:break-all}
+.back-btn{font-size:13px;color:var(--t3);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:6px;margin-bottom:20px;background:none;border:none;font-family:'Inter',sans-serif}
+.back-btn:hover{color:var(--t)}
+.empty-state{text-align:center;padding:60px 20px;color:var(--t3)}
+.empty-icon{font-size:48px;margin-bottom:16px}
+.empty-title{font-size:18px;font-weight:600;color:var(--t2);margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <div class="logo-icon">E</div>
+    <span class="logo-name">ElevateLP Revisões</span>
+    <span class="logo-badge">Painel</span>
+  </div>
+  <div class="header-status">
+    <div class="sdot"></div>
+    <span>Online</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- LISTA DE SESSÕES -->
+  <div id="view-lista">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Sessões de Revisão</div>
+        <div class="page-sub">Crie uma sessão, envie o link para o cliente e aplique as alterações com IA.</div>
+      </div>
+      <button class="btn-primary" onclick="showView('criar')">+ Nova sessão</button>
+    </div>
+    <div id="lista-sessoes"></div>
+  </div>
+
+  <!-- CRIAR SESSÃO -->
+  <div id="view-criar" class="hidden">
+    <button class="back-btn" onclick="showView('lista')">← Voltar</button>
+    <div class="page-title" style="margin-bottom:20px">Nova sessão de revisão</div>
+
+    <div class="card">
+      <label>Nome do cliente</label>
+      <input type="text" id="nomeCliente" placeholder="Ex: João — Nutricionista" style="margin-bottom:14px"/>
+      <label>URL da página (para visualização nas dobras)</label>
+      <input type="text" id="pageUrl" placeholder="https://seusite.com/pagina-do-cliente" style="margin-bottom:14px"/>
+      <label>JSON do Elementor</label>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('jsonInput').click()">
+        <div style="font-size:24px;margin-bottom:8px" id="dropIcon">📄</div>
+        <div style="font-weight:500;font-size:14px;margin-bottom:3px" id="dropTitle">Arraste o .json aqui</div>
+        <div style="font-size:12px;color:var(--t3)" id="dropSub">ou clique para selecionar</div>
+      </div>
+      <input type="file" id="jsonInput" accept=".json" style="display:none" onchange="handleJson(this.files[0])">
+    </div>
+
+    <div class="alert alert-err" id="alertCriar"></div>
+    <button class="btn-primary" onclick="criarSessao()">Criar sessão e gerar link →</button>
+
+    <div id="sessaoCriada" class="hidden" style="margin-top:20px">
+      <div class="result-box">
+        <div style="font-size:36px;margin-bottom:12px">🔗</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin-bottom:8px">Sessão criada!</div>
+        <div style="font-size:13px;color:var(--t3);margin-bottom:0">Copie o link abaixo e envie para o cliente.</div>
+      </div>
+      <div class="link-box">
+        <div class="link-text" id="linkGerado"></div>
+        <button class="btn-secondary" onclick="copiarLink()" id="btnCopiar">Copiar</button>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--t3);text-align:center">O cliente acessa o link, faz as anotações dobra por dobra, e envia. Você será notificado aqui.</div>
+    </div>
+  </div>
+
+  <!-- DETALHE DA SESSÃO -->
+  <div id="view-detalhe" class="hidden">
+    <button class="back-btn" onclick="showView('lista')">← Voltar para sessões</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div class="page-title" id="detalheNome"></div>
+        <div class="page-sub" id="detalheMeta"></div>
+      </div>
+      <div id="detalheStatus"></div>
+    </div>
+
+    <div id="detalheConteudo"></div>
+  </div>
+
+</div>
+
+<script>
+let jsonData = null;
+let sessaoAtualId = null;
+const BASE_URL = window.location.origin;
+
+// Drop zone
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); if (e.dataTransfer.files[0]) handleJson(e.dataTransfer.files[0]); });
+
+function handleJson(file) {
+  if (!file.name.endsWith('.json')) { showErr('alertCriar', 'Selecione um arquivo .json'); return; }
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      jsonData = JSON.parse(e.target.result);
+      dz.classList.add('loaded');
+      document.getElementById('dropIcon').textContent = '✅';
+      document.getElementById('dropTitle').innerHTML = '<span style="color:var(--g)">' + file.name + '</span>';
+      document.getElementById('dropSub').textContent = 'JSON carregado';
+    } catch(e) { showErr('alertCriar', 'JSON inválido'); }
+  };
+  r.readAsText(file);
+}
+
+function showView(view) {
+  ['lista','criar','detalhe'].forEach(v => document.getElementById('view-' + v).classList.toggle('hidden', v !== view));
+  if (view === 'lista') carregarSessoes();
+}
+
+async function criarSessao() {
+  const nome = document.getElementById('nomeCliente').value.trim();
+  const url = document.getElementById('pageUrl').value.trim();
+  if (!nome) { showErr('alertCriar', 'Digite o nome do cliente'); return; }
+  if (!url && !jsonData) { showErr('alertCriar', 'Informe a URL ou o JSON da página'); return; }
+
+  const btn = document.querySelector('#view-criar .btn-primary');
+  btn.disabled = true; btn.textContent = 'Criando...';
+
+  try {
+    const res = await fetch('/api/criar-sessao', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clienteNome: nome, pageUrl: url || '', jsonData })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+
+    const link = BASE_URL + '/revisao?s=' + data.sessaoId;
+    document.getElementById('linkGerado').textContent = link;
+    document.getElementById('sessaoCriada').classList.remove('hidden');
+    sessaoAtualId = data.sessaoId;
+  } catch(e) { showErr('alertCriar', 'Erro: ' + e.message); }
+  finally { btn.disabled = false; btn.textContent = 'Criar sessão e gerar link →'; }
+}
+
+function copiarLink() {
+  const link = document.getElementById('linkGerado').textContent;
+  navigator.clipboard.writeText(link).then(() => {
+    const btn = document.getElementById('btnCopiar');
+    btn.textContent = '✓ Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  });
+}
+
+async function carregarSessoes() {
+  try {
+    const res = await fetch('/api/sessoes');
+    const data = await res.json();
+    const container = document.getElementById('lista-sessoes');
+
+    if (!data.sessoes || data.sessoes.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Nenhuma sessão ainda</div><div>Crie uma nova sessão para começar</div></div>';
+      return;
+    }
+
+    container.innerHTML = data.sessoes.reverse().map(s => {
+      const statusBadge = {
+        aguardando: '<span class="badge badge-gray">⏳ Aguardando cliente</span>',
+        em_revisao: '<span class="badge badge-amber">✏️ Em revisão</span>',
+        revisao_concluida: '<span class="badge badge-green">✅ Revisão enviada</span>',
+        aplicado: '<span class="badge badge-blue">⚡ Aplicado</span>'
+      }[s.status] || '<span class="badge badge-gray">' + s.status + '</span>';
+
+      const inicial = (s.clienteNome || '?')[0].toUpperCase();
+      const data_criacao = new Date(s.criadoEm).toLocaleDateString('pt-BR');
+
+      return '<div class="sessao-card" onclick="verDetalhe(\'' + s.id + '\')">' +
+        '<div class="sessao-avatar">' + inicial + '</div>' +
+        '<div class="sessao-info">' +
+          '<div class="sessao-nome">' + s.clienteNome + '</div>' +
+          '<div class="sessao-meta">' + s.dobras + ' dobras · criado em ' + data_criacao + '</div>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">' +
+          statusBadge +
+          (s.revisoes > 0 ? '<span style="font-size:11px;color:var(--t3)">' + s.revisoes + ' dobra(s) revisada(s)</span>' : '') +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('lista-sessoes').innerHTML = '<div style="color:var(--t3);padding:20px">Erro ao carregar sessões</div>';
+  }
+}
+
+async function verDetalhe(id) {
+  try {
+    const res = await fetch('/api/sessao?id=' + id);
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    const s = data.sessao;
+    sessaoAtualId = id;
+
+    document.getElementById('detalheNome').textContent = s.clienteNome;
+    const urlLabel = s.pageUrl ? ' · ' + s.pageUrl : '';
+    document.getElementById('detalheMeta').textContent = s.dobras.length + ' dobras' + urlLabel;
+
+    const statusMap = {
+      aguardando: '<span class="badge badge-gray">⏳ Aguardando cliente</span>',
+      em_revisao: '<span class="badge badge-amber">✏️ Em revisão</span>',
+      revisao_concluida: '<span class="badge badge-green">✅ Revisão enviada</span>',
+      aplicado: '<span class="badge badge-blue">⚡ Aplicado</span>'
+    };
+    document.getElementById('detalheStatus').innerHTML = statusMap[s.status] || '';
+
+    const link = BASE_URL + '/revisao?s=' + id;
+
+    let html = '';
+
+    // Link para compartilhar
+    html += '<div class="card" style="margin-bottom:16px">' +
+      '<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:10px">🔗 Link do cliente</div>' +
+      '<div class="link-box" style="margin-top:0">' +
+        '<div class="link-text">' + link + '</div>' +
+        '<button class="btn-secondary" onclick="navigator.clipboard.writeText(\'' + link + '\').then(()=>this.textContent=\'✓ Copiado\')">Copiar</button>' +
+      '</div>' +
+    '</div>';
+
+    // Se tem revisões
+    if (s.revisoes.length > 0) {
+      html += '<div class="card">';
+      html += '<div style="font-size:14px;font-weight:600;margin-bottom:14px">Revisões enviadas pelo cliente</div>';
+      s.revisoes.forEach(r => {
+        html += '<div class="revisao-item">';
+        html += '<div class="revisao-dobra-title">Dobra ' + r.dobraNumero + '</div>';
+        (r.revisoes || []).forEach(alt => {
+          html += '<div class="rev-alt">';
+          if (alt.tipo === 'texto') {
+            html += '<div class="rev-de">Trocar texto:</div>';
+            html += '<div class="rev-para">"' + alt.de + '" → "' + alt.para + '"</div>';
+          } else if (alt.tipo === 'cor') {
+            html += '<div class="rev-de">Mudar cor — ' + alt.campo + '</div>';
+            html += '<div class="rev-para">' + alt.cor + '</div>';
+          } else if (alt.tipo === 'imagem') {
+            html += '<div class="rev-de">Trocar imagem</div>';
+            html += '<div class="rev-para">' + alt.descricao + '</div>';
+          } else {
+            html += '<div class="rev-de">Observação livre</div>';
+            html += '<div class="rev-para">' + alt.texto + '</div>';
+          }
+          html += '</div>';
+        });
+        html += '</div>';
+      });
+      html += '</div>';
+
+      // Botão aplicar
+      if (s.status === 'revisao_concluida' || s.status === 'em_revisao') {
+        html += '<div style="text-align:center;margin-top:8px">' +
+          '<button class="btn-green" onclick="aplicarAlteracoes(\'' + id + '\')" id="btnAplicar">⚡ Aplicar alterações com IA</button>' +
+          '<div style="font-size:12px;color:var(--t3);margin-top:8px">O app aplica os textos automaticamente e lista o que fazer manualmente</div>' +
+        '</div>';
+      }
+    } else {
+      html += '<div style="text-align:center;padding:40px;color:var(--t3)">' +
+        '<div style="font-size:32px;margin-bottom:12px">⏳</div>' +
+        '<div style="font-size:14px;color:var(--t2);font-weight:500;margin-bottom:6px">Aguardando revisão do cliente</div>' +
+        '<div style="font-size:13px">O cliente ainda não enviou as anotações</div>' +
+      '</div>';
+    }
+
+    document.getElementById('detalheConteudo').innerHTML = html;
+    showView('detalhe');
+  } catch(e) {
+    alert('Erro: ' + e.message);
+  }
+}
+
+async function aplicarAlteracoes(id) {
+  const btn = document.getElementById('btnAplicar');
+  btn.disabled = true; btn.textContent = 'Processando...';
+  try {
+    const res = await fetch('/api/aplicar', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessaoId: id })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+
+    // Baixar JSON
+    const blob = new Blob([JSON.stringify(data.json, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'revisao-aplicada.json';
+    a.click();
+
+    // Mostrar resultado
+    let html = '<div class="result-box"><div style="font-size:36px;margin-bottom:12px">🎉</div>' +
+      '<div style="font-family:Space Grotesk,sans-serif;font-size:20px;font-weight:600;margin-bottom:8px">Alterações aplicadas!</div>' +
+      '<div style="font-size:13px;color:var(--t3)">' + data.aplicados + ' texto(s) alterado(s) automaticamente. JSON baixado.</div>' +
+    '</div>';
+
+    if (data.pendencias && data.pendencias.length > 0) {
+      html += '<div class="card" style="border-color:rgba(249,64,81,0.2)">' +
+        '<div style="font-size:14px;font-weight:600;color:var(--red);margin-bottom:12px">⚠️ Pendências manuais (' + data.pendencias.length + ')</div>';
+      data.pendencias.forEach(p => {
+        const emoji = p.tipo === 'cor' ? '🎨' : p.tipo === 'imagem' ? '🖼️' : '⚙️';
+        html += '<div class="pendencia-item">' +
+          '<div class="pendencia-tipo">' + emoji + ' ' + (p.tipo||'manual').toUpperCase() + '</div>' +
+          '<div class="pendencia-desc">' + p.descricao + '</div>' +
+          (p.detalhe ? '<div class="pendencia-detalhe">→ ' + p.detalhe + '</div>' : '') +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    document.getElementById('detalheConteudo').innerHTML = html + '<div style="text-align:center;margin-top:14px"><button class="btn-secondary" onclick="showView(\'lista\')">← Voltar para sessões</button></div>';
+  } catch(e) {
+    alert('Erro: ' + e.message);
+    btn.disabled = false; btn.textContent = '⚡ Aplicar alterações com IA';
+  }
+}
+
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+// Carregar sessões ao iniciar
+carregarSessoes();
+</script>
+</body>
+</html>
