@@ -9,7 +9,6 @@
 :root{--red:#f94051;--rs:rgba(249,64,81,0.08);--bg:#f4f4f8;--s:#fff;--s2:#f0f0f5;--b:#e0e0ec;--t:#1a1a2e;--t2:#4a4a6a;--t3:#9090a8;--g:#00c47a;--amber:#f5a623;--blue:#4f8ef7}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
-
 header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
 .logo-icon{width:30px;height:30px;background:linear-gradient(135deg,#f94051,#ff2040);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
 .logo-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--t)}
@@ -17,15 +16,13 @@ header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;displ
 .prog-text{font-size:12px;color:var(--t3);white-space:nowrap;font-weight:500}
 .prog-bar{width:120px;height:6px;background:var(--b);border-radius:3px;overflow:hidden}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b78);border-radius:3px;transition:width .4s}
-
 .container{max-width:720px;margin:0 auto;padding:24px 16px 100px}
-
 .dobra-header{text-align:center;margin-bottom:20px}
 .dobra-num{font-size:11px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
 .dobra-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--t);margin-bottom:5px}
 .dobra-sub{font-size:13px;color:var(--t2)}
 
-/* === PREVIEW BOX GRANDE === */
+/* PREVIEW BOX */
 .preview-box{background:white;border:1px solid var(--b);border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
 .preview-bar{background:#e8e8f0;padding:10px 16px;display:flex;align-items:center;gap:8px}
 .dots{display:flex;gap:5px}
@@ -33,65 +30,67 @@ header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;displ
 .dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
 .preview-url{font-size:11px;color:var(--t3);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* Screenshot — GRANDE, ocupa toda a largura */
-.screenshot-area{
+/* SCREENSHOT - grande, ocupa 100% */
+.screenshot-wrap{
   width:100%;
-  position:relative;
-  background:#f0f0f8;
-  min-height:300px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  height:400px;
   overflow:hidden;
+  position:relative;
+  background:#e8e8f0;
 }
-.screenshot-area img{
+.screenshot-wrap img{
   width:100%;
-  height:auto;
+  height:100%;
+  object-fit:cover;
+  object-position:center top; /* sobrescrito por JS */
   display:block;
-  /* Usar object-position para mostrar a parte correta */
+  transition:opacity .3s;
 }
-.screenshot-loading{text-align:center;padding:40px;color:var(--t3);width:100%}
-.screenshot-loading .icon{font-size:40px;margin-bottom:12px;display:block;animation:bounce 1s ease-in-out infinite alternate}
-@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
-.screenshot-loading p{font-size:14px;margin-bottom:4px;color:var(--t2);font-weight:500}
-.screenshot-loading small{font-size:12px;color:var(--t3)}
+.screenshot-loading{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#f0f0f8;color:var(--t3);gap:12px;
+}
+.loading-icon{font-size:48px;animation:bounce 1s ease-in-out infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+.loading-text{font-size:15px;font-weight:500;color:var(--t2)}
+.loading-sub{font-size:12px;color:var(--t3)}
 
-.secao-badge{background:rgba(249,64,81,0.08);border-top:1px solid rgba(249,64,81,0.12);padding:9px 16px;font-size:12px;color:var(--t3);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:500}
+.secao-badge{padding:10px 16px;font-size:12px;color:var(--t3);text-align:center;border-top:1px solid var(--b);background:white;font-weight:500}
 
-/* Chips clicáveis */
+/* Chips */
 .chips-section{padding:14px 16px;background:white;border-top:1px solid var(--b)}
-.chips-hint{font-size:11px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.chips-hint{font-size:11px;color:var(--t3);margin-bottom:10px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:7px 13px;font-size:12px;color:var(--t2);cursor:pointer;transition:all .15s;max-width:260px}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:7px 13px;font-size:12px;color:var(--t2);cursor:pointer;transition:.15s;max-width:260px}
 .chip:hover{border-color:var(--red);color:var(--red);background:var(--rs)}
 .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* Cards */
 .card{background:white;border:1px solid var(--b);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,0.04)}
 .section-label{font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px}
-.alt-item{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:11px 13px;margin-bottom:8px;position:relative;padding-right:38px}
+.alt-item{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:11px 13px;margin-bottom:8px;position:relative;padding-right:40px}
 .badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin-bottom:7px;display:inline-block}
 .b-texto{background:rgba(79,142,247,.12);color:var(--blue)}
 .b-cor{background:rgba(245,166,35,.12);color:var(--amber)}
 .b-img{background:rgba(0,196,122,.12);color:var(--g)}
 .b-obs{background:var(--rs);color:var(--red)}
-.alt-del{position:absolute;top:9px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:20px;line-height:1;padding:2px 5px;border-radius:4px}
+.alt-del{position:absolute;top:9px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;border-radius:4px}
 .alt-del:hover{background:var(--b);color:var(--t)}
 .add-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
-.add-btn{padding:11px 12px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;background:white;border:1.5px solid var(--b);color:var(--t2);transition:all .15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.add-btn{padding:12px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;background:white;border:1.5px solid var(--b);color:var(--t2);transition:.15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
 .add-btn:hover{border-color:var(--red);color:var(--red);background:var(--rs)}
-.empty-note{text-align:center;padding:20px;color:var(--t3);font-size:13px;background:var(--s2);border-radius:10px;margin-bottom:12px;line-height:1.6}
+.empty-note{text-align:center;padding:20px;color:var(--t3);font-size:13px;background:var(--s2);border-radius:10px;margin-bottom:12px;line-height:1.7}
 
-/* Nav fixo */
+/* Nav */
 .nav-fixed{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--b);padding:12px 16px;display:flex;gap:10px;z-index:100;box-shadow:0 -4px 16px rgba(0,0,0,0.08)}
 .btn-back{flex:1;padding:14px;border-radius:11px;font-size:14px;font-weight:500;cursor:pointer;background:var(--s2);border:1px solid var(--b);color:var(--t2)}
-.btn-back:hover{background:var(--b)}
 .btn-next{flex:2;padding:14px;border-radius:11px;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--red),#d92d3e);border:none;color:white;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 16px rgba(249,64,81,.3);transition:.2s}
-.btn-next:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(249,64,81,.4)}
+.btn-next:hover{transform:translateY(-1px)}
 .btn-next.finalizar{background:linear-gradient(135deg,var(--g),#00a066);box-shadow:0 4px 16px rgba(0,196,122,.3)}
 
-/* Modal bottom sheet */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:flex-end;justify-content:center}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:flex-end;justify-content:center}
 .modal{background:white;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto}
 .modal-handle{width:40px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 16px}
 .modal-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin-bottom:16px}
@@ -104,7 +103,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
 .color-row{display:flex;gap:8px;align-items:center}
 .color-pick{width:52px;height:48px;border-radius:10px;padding:3px;cursor:pointer;border:1px solid var(--b);flex-shrink:0}
 
-/* Finalizado */
+/* Final */
 .finalizado{text-align:center;padding:60px 20px}
 .final-icon{font-size:80px;margin-bottom:20px;animation:pop .5s ease}
 @keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
@@ -139,27 +138,29 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
         <div class="dobra-sub">Veja a seção abaixo e anote o que quer mudar</div>
       </div>
 
-      <!-- PREVIEW GRANDE -->
       <div class="preview-box">
         <div class="preview-bar">
           <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
           <div class="preview-url" id="previewUrl">Carregando...</div>
         </div>
-        <div class="screenshot-area" id="screenshotArea">
-          <div class="screenshot-loading">
-            <span class="icon">📸</span>
-            <p>Carregando visualização...</p>
-            <small>Aguarde alguns instantes</small>
+
+        <div class="screenshot-wrap" id="screenshotWrap">
+          <div class="screenshot-loading" id="screenshotLoading">
+            <span class="loading-icon">📸</span>
+            <span class="loading-text">Preparando visualização...</span>
+            <span class="loading-sub">Aguarde alguns instantes</span>
           </div>
+          <img id="screenshotImg" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover" />
         </div>
+
         <div class="secao-badge" id="secaoBadge"></div>
-        <div class="chips-section" id="chipsSection">
+
+        <div class="chips-section" id="chipsSection" style="display:none">
           <div class="chips-hint">💡 Clique num texto para trocar rapidamente:</div>
           <div class="chips" id="chipsWrap"></div>
         </div>
       </div>
 
-      <!-- Anotações -->
       <div class="card">
         <div class="section-label">✏️ Anotações para esta seção</div>
         <div id="altList">
@@ -178,7 +179,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
       <div class="finalizado">
         <div class="final-icon">🎉</div>
         <div class="final-title">Revisão enviada!</div>
-        <div class="final-sub">Suas anotações foram salvas com sucesso. O desenvolvedor vai analisar e aplicar as alterações em breve. Obrigado!</div>
+        <div class="final-sub">Obrigado! Suas anotações foram salvas. O desenvolvedor vai aplicar todas as alterações em breve.</div>
       </div>
     </div>
   </div>
@@ -207,12 +208,12 @@ let dobraAtual = 0;
 let anotacoes = {};
 let tipoModal = '';
 let textoAutoFill = '';
-let pollingInterval = null;
+let pollingTimer = null;
 
 async function iniciar() {
   const sid = new URLSearchParams(window.location.search).get('s');
   if (!sid) {
-    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div style="font-size:16px">Link inválido. Peça um novo link.</div>';
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Link inválido. Peça um novo link para o desenvolvedor.</div>';
     return;
   }
   try {
@@ -223,30 +224,29 @@ async function iniciar() {
     document.getElementById('loading-page').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     renderDobra();
-    // Polling para atualizar screenshots quando ficarem prontos
+    // Polling para screenshot
     if (!sessao.screenshotsReady) {
-      pollingInterval = setInterval(atualizarScreenshots, 4000);
+      pollingTimer = setInterval(verificarScreenshot, 3000);
     }
   } catch(e) {
-    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div style="font-size:16px">Sessão não encontrada.</div>';
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Sessão não encontrada ou expirada.</div>';
   }
 }
 
-async function atualizarScreenshots() {
+async function verificarScreenshot() {
   try {
     const r = await fetch('/api/sessao?id=' + sessao.id);
     const d = await r.json();
     if (!d.success) return;
-    sessao.dobras = d.sessao.dobras;
-    sessao.screenshotsReady = d.sessao.screenshotsReady;
-    // Atualizar screenshot da dobra atual se ficou pronto
-    const dobraAtualData = sessao.dobras[dobraAtual];
-    if (dobraAtualData && dobraAtualData.screenshotUrl) {
-      mostrarScreenshot(dobraAtualData);
-    }
-    if (sessao.screenshotsReady) {
-      clearInterval(pollingInterval);
-      pollingInterval = null;
+    const s = d.sessao;
+    // Atualizar screenshot se chegou
+    if (s.screenshotPaginaUrl && !sessao.screenshotPaginaUrl) {
+      sessao.screenshotPaginaUrl = s.screenshotPaginaUrl;
+      sessao.screenshotsReady = true;
+      clearInterval(pollingTimer);
+      pollingTimer = null;
+      // Mostrar screenshot da dobra atual
+      mostrarScreenshot();
     }
   } catch(e) {}
 }
@@ -269,9 +269,9 @@ function renderDobra() {
   btn.classList.toggle('finalizar', isUlt);
 
   // Screenshot
-  mostrarScreenshot(dobra);
+  mostrarScreenshot();
 
-  // Chips
+  // Chips — só os textos desta dobra
   const chips = document.getElementById('chipsWrap');
   chips.innerHTML = '';
   const textos = dobra.textos || [];
@@ -292,54 +292,31 @@ function renderDobra() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function mostrarScreenshot(dobra) {
-  const area = document.getElementById('screenshotArea');
-  const pageUrl = sessao.pageUrl;
+function mostrarScreenshot() {
+  const img = document.getElementById('screenshotImg');
+  const loading = document.getElementById('screenshotLoading');
+  const dobra = sessao.dobras[dobraAtual];
   const total = sessao.dobras.length;
-  const atual = dobraAtual + 1;
 
-  // Se tem screenshot pronto do server, usar
-  if (dobra.screenshotUrl) {
-    area.innerHTML = '';
-    const img = document.createElement('img');
-    img.style.cssText = 'width:100%;height:auto;display:block;min-height:300px;object-fit:cover;object-position:top';
-    img.onerror = () => { usarIframeFallback(area, pageUrl, dobraAtual, total); };
-    img.src = dobra.screenshotUrl;
-    area.appendChild(img);
-    return;
+  if (sessao.screenshotPaginaUrl) {
+    // Temos o screenshot da página inteira
+    // Calcular qual parte mostrar baseado na posição da dobra
+    const pct = dobra.posicaoPct !== undefined ? dobra.posicaoPct : (dobraAtual / Math.max(total - 1, 1)) * 100;
+    const objPos = 'center ' + Math.round(pct) + '%';
+
+    loading.style.display = 'none';
+    img.style.display = 'block';
+    img.style.objectPosition = objPos;
+
+    if (img.src !== sessao.screenshotPaginaUrl) {
+      img.src = sessao.screenshotPaginaUrl;
+    }
+  } else {
+    // Screenshot ainda não pronto
+    loading.style.display = 'flex';
+    img.style.display = 'none';
+    loading.innerHTML = '<span class="loading-icon">📸</span><span class="loading-text">Preparando visualização...</span><span class="loading-sub">Aguarde alguns instantes</span>';
   }
-
-  // Se não tem screenshot mas tem URL, usar iframe
-  if (pageUrl) {
-    usarIframeFallback(area, pageUrl, dobraAtual, total);
-    return;
-  }
-
-  // Sem URL: mostrar textos
-  const textos = dobra.textos || [];
-  area.innerHTML = '<div style="padding:20px;width:100%">' +
-    '<div style="font-size:13px;color:var(--t3);margin-bottom:12px;text-align:center">📋 Textos desta seção:</div>' +
-    (textos.length > 0
-      ? textos.map(t => '<div style="background:white;border:1px solid var(--b);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px;">' + t + '</div>').join('')
-      : '<div style="text-align:center;color:var(--t3);padding:20px">Nenhum texto identificado</div>'
-    ) + '</div>';
-}
-
-function usarIframeFallback(area, pageUrl, dobraIdx, total) {
-  // Calcular scroll estimado para esta dobra
-  const scrollPct = total <= 1 ? 0 : (dobraIdx / (total - 1));
-  const scrollY = Math.round(scrollPct * 3000);
-
-  area.style.minHeight = '380px';
-  area.innerHTML =
-    '<div style="width:100%;height:380px;overflow:hidden;position:relative;background:#f0f0f8">' +
-    '<iframe ' +
-    'src="' + pageUrl + '" ' +
-    'style="width:180%;height:1100px;border:none;transform:scale(0.556);transform-origin:top left;pointer-events:none;" ' +
-    'loading="lazy" ' +
-    'onload="try{this.contentWindow.scrollTo(0,' + scrollY + ')}catch(e){}"></iframe>' +
-    '<div style="position:absolute;inset:0;background:transparent"></div>' +
-    '</div>';
 }
 
 function abrirModal(tipo) {
@@ -358,9 +335,9 @@ function abrirModal(tipo) {
     body = '<div style="margin-bottom:14px"><label>Qual elemento?</label><input type="text" id="m_campo" placeholder="Ex: botão principal, fundo da seção, título..."/></div>' +
       '<div><label>Nova cor</label><div class="color-row"><input type="color" class="color-pick" id="m_cpick" value="#f94051" oninput="document.getElementById(\'m_cor\').value=this.value"/>' +
       '<input type="text" id="m_cor" placeholder="#f94051 ou nome da cor" oninput="try{document.getElementById(\'m_cpick\').value=this.value}catch(e){}"/></div>' +
-      '<div style="font-size:11px;color:var(--t3);margin-top:8px">Use o seletor de cor ou escreva o nome: azul escuro, vermelho, verde...</div></div>';
+      '<div style="font-size:11px;color:var(--t3);margin-top:8px">Use o seletor ou escreva: azul escuro, vermelho, verde...</div></div>';
   } else if (tipo === 'imagem') {
-    body = '<div><label>Descreva a troca</label><textarea id="m_img" rows="4" placeholder="Ex: Trocar a foto do hero por uma imagem de uma mulher sorrindo em ambiente de escritório moderno..."></textarea></div>';
+    body = '<div><label>Descreva a troca</label><textarea id="m_img" rows="4" placeholder="Ex: Trocar a foto por uma imagem de escritório moderno com pessoas trabalhando..."></textarea></div>';
   } else {
     body = '<div><label>Sua observação</label><textarea id="m_obs" rows="5" placeholder="Escreva qualquer anotação sobre esta seção..."></textarea></div>';
   }
@@ -447,7 +424,7 @@ async function proximaDobra() {
   await salvarDobra();
   if (dobraAtual >= sessao.dobras.length - 1) {
     await fetch('/api/finalizar-revisao', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessaoId:sessao.id})});
-    if (pollingInterval) { clearInterval(pollingInterval); pollingInterval = null; }
+    if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
     document.getElementById('view-dobra').classList.add('hidden');
     document.getElementById('view-final').classList.remove('hidden');
     document.getElementById('navFixed').style.display = 'none';

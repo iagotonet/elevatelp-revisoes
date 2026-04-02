@@ -13,18 +13,26 @@ function genId() { return crypto.randomBytes(6).toString('hex'); }
 
 function fetchUrl(url, timeout) {
   return new Promise((resolve, reject) => {
-    const u = new URL(url);
-    const mod = u.protocol === 'https:' ? https : http;
-    const req = mod.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ElevateLP/2.0)' } }, res => {
-      if ([301,302,303,307,308].includes(res.statusCode)) {
-        return fetchUrl(res.headers.location, timeout).then(resolve).catch(reject);
-      }
-      let data = '';
-      res.on('data', c => data += c);
-      res.on('end', () => resolve(data));
-    });
-    req.on('error', reject);
-    req.setTimeout(timeout || 20000, () => { req.destroy(); reject(new Error('timeout')); });
+    try {
+      const u = new URL(url);
+      const mod = u.protocol === 'https:' ? https : http;
+      const req = mod.get(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'pt-BR,pt;q=0.9,en;q=0.8'
+        }
+      }, res => {
+        if ([301,302,303,307,308].includes(res.statusCode) && res.headers.location) {
+          return fetchUrl(res.headers.location, timeout).then(resolve).catch(reject);
+        }
+        let data = '';
+        res.on('data', c => data += c);
+        res.on('end', () => resolve(data));
+      });
+      req.on('error', reject);
+      req.setTimeout(timeout || 20000, () => { req.destroy(); reject(new Error('timeout')); });
+    } catch(e) { reject(e); }
   });
 }
 
@@ -32,101 +40,55 @@ function stripHtml(h) {
   return (h || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// Capturar screenshot de uma URL numa posição específica usando Playwright via API
-// Como não temos Playwright, usamos o serviço headless do browserless.io ou
-// a API do screenshotone.com que é gratuita com limitações
-// Melhor abordagem: usar o puppeteer via API externa gratuita
-async function tirarScreenshot(pageUrl, scrollY) {
-  // Usar screenshotone API (gratuita, sem chave para uso básico)
-  // ou usar a API do htmlcsstoimage
-  // Melhor: usar o endpoint do microlink com o parâmetro de scroll/clip
-
-  // Abordagem: usar a API do microlink com viewport e scroll
-  const params = new URLSearchParams({
-    url: pageUrl,
-    screenshot: 'true',
-    meta: 'false',
-    embed: 'screenshot.url',
-    'viewport.width': '1280',
-    'viewport.height': '800',
-    'waitFor': '3000', // esperar 3s após carregar
-  });
-
-  if (scrollY > 0) {
-    params.set('scroll', scrollY.toString());
-  }
-
-  const apiUrl = 'https://api.microlink.io/?' + params.toString();
-
+// Tirar screenshot da página inteira UMA vez e salvar a URL
+async function tirarScreenshotPagina(pageUrl) {
   try {
-    const response = await fetchUrl(apiUrl, 30000);
+    const mlUrl = 'https://api.microlink.io/?' + new URLSearchParams({
+      url: pageUrl,
+      screenshot: 'true',
+      meta: 'false',
+      embed: 'screenshot.url',
+      'viewport.width': '1280',
+      'viewport.height': '900',
+      'waitFor': '3000',
+      'fullPage': 'true'  // screenshot da página INTEIRA
+    }).toString();
+
+    console.log('Tirando screenshot full-page de:', pageUrl);
+    const response = await fetchUrl(mlUrl, 40000);
     const json = JSON.parse(response);
+
     if (json.status === 'success' && json.data && json.data.screenshot && json.data.screenshot.url) {
+      console.log('Screenshot OK:', json.data.screenshot.url.substring(0, 80));
       return json.data.screenshot.url;
     }
-  } catch(e) {}
-  return null;
-}
-
-// Extrair dobras da página HTML
-function extrairDobras(html, pageUrl) {
-  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-  html = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
-
-  const dobras = [];
-  // Tentar seções do Elementor
-  const secPattern = /<section[^>]*class="[^"]*elementor-section[^"]*"[^>]*>([\s\S]*?)<\/section>/gi;
-  let m, idx = 0;
-  while ((m = secPattern.exec(html)) !== null && dobras.length < 15) {
-    const textos = extrairTextos(m[1]).slice(0, 8);
-    if (textos.length > 0) {
-      idx++;
-      dobras.push({ numero: idx, titulo: 'Seção ' + idx, textos, screenshotUrl: null });
-    }
+    console.log('Screenshot falhou:', JSON.stringify(json).substring(0, 200));
+    return null;
+  } catch(e) {
+    console.log('Erro screenshot:', e.message);
+    return null;
   }
-  // Fallback por H2/H3
-  if (dobras.length < 2) {
-    const parts = html.split(/<h[23][^>]*>/gi);
-    parts.forEach((sec, i) => {
-      if (i === 0 || dobras.length >= 12) return;
-      const textos = extrairTextos(sec).slice(0, 8);
-      if (textos.length > 0) {
-        dobras.push({ numero: i, titulo: 'Seção ' + i, textos, screenshotUrl: null });
-      }
-    });
-  }
-  // Mínimo 1
-  if (dobras.length === 0) {
-    dobras.push({ numero: 1, titulo: 'Página completa', textos: [], screenshotUrl: null });
-  }
-  return dobras;
-}
-
-function extrairTextos(html) {
-  const textos = [];
-  const pat = /<(h[1-6]|p|span|a|button)[^>]*>([\s\S]*?)<\/\1>/gi;
-  let m;
-  while ((m = pat.exec(html)) !== null) {
-    const t = stripHtml(m[2]).trim();
-    if (t.length > 3 && t.length < 300 && !/^https?:/.test(t)) textos.push(t);
-  }
-  return [...new Set(textos)];
 }
 
 function extractElementorTexts(data) {
   const texts = [];
   const seen = new Set();
-  const FIELDS = new Set(['title','text','editor','description','button_text','title_text','description_text','acc_title','acc_content','tab_title','ekit_heading_title','ekit_heading_sub_title','ekit_icon_box_title_text','ekit_icon_box_description_text','client_name','designation','review','name','content','label','heading','subtitle','caption']);
+  const FIELDS = new Set(['title','text','editor','description','button_text','title_text','description_text',
+    'acc_title','acc_content','tab_title','ekit_heading_title','ekit_heading_sub_title',
+    'ekit_icon_box_title_text','ekit_icon_box_description_text','client_name','designation',
+    'review','name','content','label','heading','subtitle','caption','ekit_icon_box_btn_text']);
 
   function isJunk(v) {
     if (!v || v.length < 2) return true;
     if (/^#[0-9a-fA-F]{3,8}$/.test(v)) return true;
     if (/^https?:\/\//.test(v)) return true;
-    if (/^\d+(\.\d+)?(px|em|rem|%)?$/.test(v)) return true;
+    if (/^\d+(\.\d+)?(px|em|rem|%|vh|vw)?$/.test(v)) return true;
     if (/^[a-f0-9]{6,32}$/.test(v)) return true;
-    if (/^[a-z0-9_-]+$/.test(v) && v.length <= 20) return true;
+    if (/^[a-z0-9_-]+$/.test(v) && v.length <= 20 && !v.includes(' ')) return true;
     if (v.replace(/[^a-zA-ZÀ-ÿ]/g,'').length < 2) return true;
-    const junk = new Set(['yes','no','true','false','none','auto','inherit','center','left','right','top','bottom','full','solid','custom','normal','bold','italic','image','recent','fadeIn','fast','slow']);
+    const junk = new Set(['yes','no','true','false','none','auto','inherit','center','left','right',
+      'top','bottom','full','solid','custom','normal','bold','italic','image','recent',
+      'fadeIn','fast','slow','shrink','uppercase','lowercase','middle','stretch']);
     return junk.has(v.toLowerCase());
   }
 
@@ -157,6 +119,58 @@ function extractElementorTexts(data) {
   }
   walk(Array.isArray(data) ? data : (data.content || []));
   return texts;
+}
+
+// Criar dobras baseadas nos elementos do JSON
+// Cada section/container do Elementor vira uma dobra
+function extrairDobrasDoJson(data) {
+  const dobras = [];
+  const root = Array.isArray(data) ? data : (data.content || []);
+
+  function getTextos(el) {
+    const texts = [];
+    const FIELDS = new Set(['title','text','editor','description','button_text','title_text','description_text','ekit_heading_title','ekit_icon_box_title_text','client_name']);
+    function isJunk(v) {
+      if (!v || v.length < 2) return true;
+      if (/^#[0-9a-fA-F]+$/.test(v) || /^https?:\/\//.test(v)) return true;
+      if (/^[a-z0-9_-]+$/.test(v) && v.length <= 15) return true;
+      return false;
+    }
+    function walk(e) {
+      if (!e || typeof e !== 'object') return;
+      const s = e.settings || {};
+      for (const [f, v] of Object.entries(s)) {
+        if (!FIELDS.has(f)) continue;
+        if (typeof v === 'string') { const c = stripHtml(v); if (!isJunk(c)) texts.push(c); }
+      }
+      if (Array.isArray(e.elements)) e.elements.forEach(walk);
+    }
+    walk(el);
+    return [...new Set(texts)].slice(0, 8);
+  }
+
+  // Cada elemento de nível raiz = uma dobra
+  root.forEach((section, i) => {
+    if (!section || typeof section !== 'object') return;
+    const textos = getTextos(section);
+    // Só adicionar se tem algum texto real
+    if (textos.length > 0 || i === 0) {
+      dobras.push({
+        numero: dobras.length + 1,
+        titulo: 'Seção ' + (dobras.length + 1),
+        textos: textos,
+        screenshotUrl: null,
+        // Posição estimada: percentual na página
+        posicaoPct: (i / Math.max(root.length - 1, 1)) * 100
+      });
+    }
+  });
+
+  if (dobras.length === 0) {
+    dobras.push({ numero: 1, titulo: 'Página completa', textos: [], screenshotUrl: null, posicaoPct: 0 });
+  }
+
+  return dobras;
 }
 
 function applyTexts(jsonData, texts, copies) {
@@ -197,9 +211,7 @@ function callClaude(system, userMsg) {
     }, res => {
       let data = '';
       res.on('data', c => data += c);
-      res.on('end', () => {
-        try { const r = JSON.parse(data); if (r.error) reject(new Error(r.error.message)); else resolve(r.content[0].text.trim()); } catch(e) { reject(e); }
-      });
+      res.on('end', () => { try { const r = JSON.parse(data); if (r.error) reject(new Error(r.error.message)); else resolve(r.content[0].text.trim()); } catch(e) { reject(e); } });
     });
     req.on('error', reject);
     req.setTimeout(120000, () => { req.destroy(); reject(new Error('timeout')); });
@@ -213,62 +225,6 @@ function parseBody(req) {
     req.on('data', c => body += c);
     req.on('end', () => { try { resolve(JSON.parse(body)); } catch(e) { reject(new Error('JSON inválido')); } });
   });
-}
-
-// Tirar screenshots de cada dobra com scroll correto
-async function capturarScreenshots(pageUrl, dobras) {
-  if (!pageUrl || dobras.length === 0) return;
-  console.log('Capturando', dobras.length, 'screenshots para', pageUrl);
-
-  // Altura estimada de cada dobra em pixels (páginas LP tipicamente ~700-900px por dobra)
-  const ALTURA_DOBRA = 750;
-
-  for (let i = 0; i < dobras.length; i++) {
-    const scrollY = i === 0 ? 0 : i * ALTURA_DOBRA;
-    try {
-      const encodedUrl = encodeURIComponent(pageUrl);
-
-      // Microlink API com javascript para fazer scroll antes do screenshot
-      // Usando o parâmetro `scrollTo` que o microlink suporta
-      const mlParams = new URLSearchParams({
-        url: pageUrl,
-        screenshot: 'true',
-        meta: 'false',
-        embed: 'screenshot.url',
-        'viewport.width': '1280',
-        'viewport.height': '768',
-        'waitFor': '2000',
-      });
-
-      // Adicionar scroll via javascript
-      if (scrollY > 0) {
-        mlParams.set('javascript', 'window.scrollTo(0,' + scrollY + ')');
-        mlParams.set('waitFor', '1500');
-      }
-
-      const mlUrl = 'https://api.microlink.io/?' + mlParams.toString();
-      console.log('Dobra', i+1, '- scroll:', scrollY, 'px');
-
-      const response = await fetchUrl(mlUrl, 35000);
-      const json = JSON.parse(response);
-
-      if (json.status === 'success' && json.data && json.data.screenshot && json.data.screenshot.url) {
-        dobras[i].screenshotUrl = json.data.screenshot.url;
-        console.log('✓ Dobra', i+1, '- URL:', dobras[i].screenshotUrl.substring(0, 60));
-      } else {
-        console.log('✗ Dobra', i+1, '- Resposta:', JSON.stringify(json).substring(0, 150));
-      }
-
-      // Aguardar 2.5s entre requests (respeitar rate limit do microlink)
-      if (i < dobras.length - 1) {
-        await new Promise(r => setTimeout(r, 2500));
-      }
-    } catch(e) {
-      console.log('✗ Erro dobra', i+1, '-', e.message);
-    }
-  }
-
-  console.log('Screenshots concluídos. Prontos:', dobras.filter(d => d.screenshotUrl).length, '/', dobras.length);
 }
 
 const server = http.createServer(async (req, res) => {
@@ -299,47 +255,41 @@ const server = http.createServer(async (req, res) => {
       let dobras = [];
       let textos = [];
 
-      // Extrair dobras da URL
-      if (pageUrl) {
-        try {
-          const html = await fetchUrl(pageUrl, 20000);
-          dobras = extrairDobras(html, pageUrl);
-        } catch(e) {
-          console.log('Erro ao buscar página:', e.message);
-          dobras = [{ numero: 1, titulo: 'Página completa', textos: [], screenshotUrl: null }];
-        }
-      }
-
-      // Extrair textos do JSON
+      // Extrair dobras e textos do JSON (mais confiável que o HTML)
       if (jsonData) {
         const parsed = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
         textos = extractElementorTexts(parsed);
-        // Distribuir textos pelas dobras
-        if (dobras.length > 0) {
-          textos.forEach((t, i) => {
-            const dobraIdx = Math.min(Math.floor(i / Math.ceil(textos.length / dobras.length)), dobras.length - 1);
-            if (!dobras[dobraIdx].textos) dobras[dobraIdx].textos = [];
-            if (!dobras[dobraIdx].textos.includes(t.text)) dobras[dobraIdx].textos.push(t.text);
-          });
-        }
+        dobras = extrairDobrasDoJson(parsed);
+      } else if (pageUrl) {
+        // Sem JSON: criar dobra única
+        dobras = [{ numero: 1, titulo: 'Página completa', textos: [], screenshotUrl: null, posicaoPct: 0 }];
+      } else {
+        throw new Error('Informe a URL ou o JSON da página');
       }
 
       sessoes[sessaoId] = {
-        id: sessaoId, clienteNome, pageUrl: pageUrl || '', jsonData: jsonData || null,
-        textos, dobras, revisoes: [], criadoEm: new Date().toISOString(), status: 'aguardando',
-        screenshotsReady: false
+        id: sessaoId, clienteNome, pageUrl: pageUrl || '',
+        jsonData: jsonData || null, textos, dobras,
+        screenshotPaginaUrl: null, // screenshot único da página inteira
+        screenshotsReady: false,
+        revisoes: [], criadoEm: new Date().toISOString(), status: 'aguardando'
       };
 
-      // Responder imediatamente com a sessão criada
+      // Responder imediatamente
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({ success: true, sessaoId, dobras: dobras.length }));
 
-      // Capturar screenshots em background (não bloqueia a resposta)
-      if (pageUrl && dobras.length > 0) {
-        capturarScreenshots(pageUrl, sessoes[sessaoId].dobras).then(() => {
-          sessoes[sessaoId].screenshotsReady = true;
-          console.log('Screenshots prontos para sessão', sessaoId);
-        }).catch(e => console.log('Erro screenshots:', e.message));
+      // Capturar screenshot em background
+      if (pageUrl) {
+        tirarScreenshotPagina(pageUrl).then(screenshotUrl => {
+          if (screenshotUrl) {
+            sessoes[sessaoId].screenshotPaginaUrl = screenshotUrl;
+            sessoes[sessaoId].screenshotsReady = true;
+            console.log('Screenshot pronto para sessão', sessaoId);
+          }
+        }).catch(e => console.log('Erro screenshot:', e.message));
+      } else {
+        sessoes[sessaoId].screenshotsReady = true;
       }
 
     } catch(e) {
@@ -349,7 +299,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Listar sessões
   if (req.method === 'GET' && pathname === '/api/sessoes') {
     const lista = Object.values(sessoes).map(s => ({
       id: s.id, clienteNome: s.clienteNome, pageUrl: s.pageUrl,
@@ -360,16 +309,14 @@ const server = http.createServer(async (req, res) => {
     res.end(JSON.stringify({ success: true, sessoes: lista })); return;
   }
 
-  // Buscar sessão
   if (req.method === 'GET' && pathname === '/api/sessao') {
     const id = url.searchParams.get('id');
     const s = sessoes[id];
-    if (!s) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ success: false, error: 'Sessão não encontrada' })); return; }
+    if (!s) { res.writeHead(404); res.end(JSON.stringify({ success: false, error: 'Sessão não encontrada' })); return; }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ success: true, sessao: { ...s, jsonData: undefined } })); return;
   }
 
-  // Revisar dobra
   if (req.method === 'POST' && pathname === '/api/revisar-dobra') {
     try {
       const { sessaoId, dobraNumero, revisoes } = await parseBody(req);
@@ -378,32 +325,22 @@ const server = http.createServer(async (req, res) => {
       s.revisoes = s.revisoes.filter(r => r.dobraNumero !== dobraNumero);
       s.revisoes.push({ dobraNumero, revisoes, enviadoEm: new Date().toISOString() });
       s.status = 'em_revisao';
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
-    } catch(e) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, error: e.message }));
-    }
+      res.writeHead(200); res.end(JSON.stringify({ success: true }));
+    } catch(e) { res.writeHead(500); res.end(JSON.stringify({ success: false, error: e.message })); }
     return;
   }
 
-  // Finalizar revisão
   if (req.method === 'POST' && pathname === '/api/finalizar-revisao') {
     try {
       const { sessaoId } = await parseBody(req);
       const s = sessoes[sessaoId];
       if (!s) throw new Error('Sessão não encontrada');
       s.status = 'revisao_concluida';
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true }));
-    } catch(e) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, error: e.message }));
-    }
+      res.writeHead(200); res.end(JSON.stringify({ success: true }));
+    } catch(e) { res.writeHead(500); res.end(JSON.stringify({ success: false, error: e.message })); }
     return;
   }
 
-  // Aplicar alterações com IA
   if (req.method === 'POST' && pathname === '/api/aplicar') {
     try {
       const { sessaoId } = await parseBody(req);
@@ -415,35 +352,28 @@ const server = http.createServer(async (req, res) => {
       const resumo = s.revisoes.map(r => {
         const linhas = (r.revisoes || []).map(alt => {
           if (alt.tipo === 'texto') return 'Trocar "' + alt.de + '" por "' + alt.para + '"';
-          if (alt.tipo === 'cor') return 'Mudar cor: ' + alt.campo + ' para ' + alt.cor;
+          if (alt.tipo === 'cor') return 'Cor: ' + alt.campo + ' → ' + alt.cor;
           if (alt.tipo === 'imagem') return 'Imagem: ' + alt.descricao;
           return 'Obs: ' + alt.texto;
         });
-        return 'DOBRA ' + r.dobraNumero + ':\n' + linhas.join('\n');
+        return 'SEÇÃO ' + r.dobraNumero + ':\n' + linhas.join('\n');
       }).join('\n\n');
 
       const parsed = typeof s.jsonData === 'string' ? JSON.parse(s.jsonData) : s.jsonData;
       const texts = s.textos.length > 0 ? s.textos : extractElementorTexts(parsed);
       const textSummary = texts.map((t, i) => '[' + i + '] [' + t.wt + '] "' + t.text.substring(0, 80) + '"').join('\n');
-
-      const sys = 'Aplica revisoes de clientes em landing pages. JSON: {"aplicacoes":[{"indice":0,"textoNovo":"texto","motivo":"motivo"}],"pendencias":[{"tipo":"cor|imagem|outro","descricao":"o que fazer","detalhe":"valor"}]}';
+      const sys = 'Aplica revisoes em landing pages. JSON: {"aplicacoes":[{"indice":0,"textoNovo":"texto","motivo":"motivo"}],"pendencias":[{"tipo":"cor|imagem|outro","descricao":"o que fazer","detalhe":"valor"}]}';
       const msg = 'CLIENTE: ' + s.clienteNome + '\n\nREVISOES:\n' + resumo + '\n\nTEXTOS (0 a ' + (texts.length-1) + '):\n' + textSummary;
       const response = await callClaude(sys, msg);
-
       let resultado = { aplicacoes: [], pendencias: [] };
       try { resultado = JSON.parse(response.replace(/```json|```/gi,'').trim()); } catch(e) {}
-
       const copies = texts.map(t => t.text);
       (resultado.aplicacoes || []).forEach(ap => { if (ap.indice >= 0 && ap.indice < texts.length && ap.textoNovo) copies[ap.indice] = ap.textoNovo; });
       const { adapted, count } = applyTexts(parsed, texts, copies);
       s.status = 'aplicado';
-
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({ success: true, aplicados: count, pendencias: resultado.pendencias || [], json: adapted }));
-    } catch(e) {
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, error: e.message }));
-    }
+    } catch(e) { res.writeHead(500); res.end(JSON.stringify({ success: false, error: e.message })); }
     return;
   }
 
