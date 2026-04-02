@@ -218,42 +218,57 @@ function parseBody(req) {
 // Tirar screenshots de cada dobra com scroll correto
 async function capturarScreenshots(pageUrl, dobras) {
   if (!pageUrl || dobras.length === 0) return;
+  console.log('Capturando', dobras.length, 'screenshots para', pageUrl);
 
-  // Primeiro: tirar screenshot do topo para estimar altura total
-  // Depois: calcular scroll por dobra e tirar screenshot de cada uma
-  console.log('Capturando screenshots para', dobras.length, 'dobras...');
-
-  // Usar microlink com parâmetro waitFor para cada dobra
-  // Estimativa: cada dobra tem ~700px de altura em média
-  const alturaEstimadaPorDobra = 700;
+  // Altura estimada de cada dobra em pixels (páginas LP tipicamente ~700-900px por dobra)
+  const ALTURA_DOBRA = 750;
 
   for (let i = 0; i < dobras.length; i++) {
-    const scrollY = i === 0 ? 0 : Math.round(i * alturaEstimadaPorDobra);
+    const scrollY = i === 0 ? 0 : i * ALTURA_DOBRA;
     try {
-      // Montar URL do microlink com scroll correto
       const encodedUrl = encodeURIComponent(pageUrl);
-      // Usar JavaScript injection para scroll via microlink
-      const mlUrl = 'https://api.microlink.io/?url=' + encodedUrl +
-        '&screenshot=true&meta=false&embed=screenshot.url' +
-        '&viewport.width=1280&viewport.height=800' +
-        '&waitFor=3000' +
-        (scrollY > 0 ? '&scroll=' + scrollY : '');
 
-      console.log('Screenshot dobra', i+1, 'scroll:', scrollY);
-      const response = await fetchUrl(mlUrl, 30000);
-      const json = JSON.parse(response);
-      if (json.status === 'success' && json.data?.screenshot?.url) {
-        dobras[i].screenshotUrl = json.data.screenshot.url;
-        console.log('OK dobra', i+1, dobras[i].screenshotUrl.substring(0,60));
-      } else {
-        console.log('Falhou dobra', i+1, JSON.stringify(json).substring(0, 100));
+      // Microlink API com javascript para fazer scroll antes do screenshot
+      // Usando o parâmetro `scrollTo` que o microlink suporta
+      const mlParams = new URLSearchParams({
+        url: pageUrl,
+        screenshot: 'true',
+        meta: 'false',
+        embed: 'screenshot.url',
+        'viewport.width': '1280',
+        'viewport.height': '768',
+        'waitFor': '2000',
+      });
+
+      // Adicionar scroll via javascript
+      if (scrollY > 0) {
+        mlParams.set('javascript', 'window.scrollTo(0,' + scrollY + ')');
+        mlParams.set('waitFor', '1500');
       }
-      // Delay entre requests para não ser bloqueado
-      if (i < dobras.length - 1) await new Promise(r => setTimeout(r, 2000));
+
+      const mlUrl = 'https://api.microlink.io/?' + mlParams.toString();
+      console.log('Dobra', i+1, '- scroll:', scrollY, 'px');
+
+      const response = await fetchUrl(mlUrl, 35000);
+      const json = JSON.parse(response);
+
+      if (json.status === 'success' && json.data && json.data.screenshot && json.data.screenshot.url) {
+        dobras[i].screenshotUrl = json.data.screenshot.url;
+        console.log('✓ Dobra', i+1, '- URL:', dobras[i].screenshotUrl.substring(0, 60));
+      } else {
+        console.log('✗ Dobra', i+1, '- Resposta:', JSON.stringify(json).substring(0, 150));
+      }
+
+      // Aguardar 2.5s entre requests (respeitar rate limit do microlink)
+      if (i < dobras.length - 1) {
+        await new Promise(r => setTimeout(r, 2500));
+      }
     } catch(e) {
-      console.log('Erro screenshot dobra', i+1, e.message);
+      console.log('✗ Erro dobra', i+1, '-', e.message);
     }
   }
+
+  console.log('Screenshots concluídos. Prontos:', dobras.filter(d => d.screenshotUrl).length, '/', dobras.length);
 }
 
 const server = http.createServer(async (req, res) => {
