@@ -254,71 +254,86 @@ function carregarScreenshot(dobra, atual, total) {
   const urlEl = document.getElementById('previewUrl');
   const pageUrl = sessao.pageUrl;
 
-  if (!pageUrl) {
-    // Sem URL: mostrar textos formatados
-    urlEl.textContent = 'Seção ' + atual + ' — textos disponíveis';
-    const textos = dobra.textos || [];
-    if (textos.length > 0) {
-      box.innerHTML = '<div style="padding:16px">' +
-        '<div style="font-size:12px;color:var(--t3);margin-bottom:10px;text-align:center">📋 Textos desta seção:</div>' +
-        textos.map(t => '<div style="background:white;border:1px solid var(--b);border-radius:8px;padding:10px 13px;margin-bottom:8px;font-size:13px;">' + t + '</div>').join('') +
-        '</div>';
-    } else {
-      box.innerHTML = '<div class="screenshot-error"><div class="icon">📋</div><div>Sem textos identificados nesta seção</div></div>';
-    }
+  urlEl.textContent = pageUrl || 'Seção ' + atual;
+
+  // 1. Se o server já preparou o screenshot desta dobra, usar direto
+  if (dobra.screenshotUrl) {
+    mostrarImg(dobra.screenshotUrl, box, atual, total);
     return;
   }
 
-  urlEl.textContent = pageUrl;
+  // 2. Se screenshots ainda não prontos, polling até ficarem
+  if (pageUrl && !sessao.screenshotsReady) {
+    box.innerHTML = '<div class="screenshot-loading"><div class="icon">⏳</div><div>Preparando visualização...<br><small style="font-size:11px;color:var(--t3)">Aguarde alguns segundos</small></div></div>';
+    // Tentar novamente em 3 segundos
+    setTimeout(async () => {
+      try {
+        const r = await fetch('/api/sessao?id=' + sessao.id);
+        const d = await r.json();
+        if (d.success) {
+          sessao.dobras = d.sessao.dobras;
+          sessao.screenshotsReady = d.sessao.screenshotsReady;
+          const dobraAtualizada = sessao.dobras[dobraAtual];
+          if (dobraAtualizada && dobraAtualizada.screenshotUrl) {
+            mostrarImg(dobraAtualizada.screenshotUrl, box, atual, total);
+            return;
+          }
+        }
+      } catch(e) {}
+      // Se ainda não tiver, usar iframe como fallback
+      if (pageUrl) usarIframe(pageUrl, dobraAtual / Math.max(total - 1, 1), box);
+    }, 3000);
+    return;
+  }
 
-  // Calcular posição aproximada da dobra na página (percentual)
-  const scrollPct = total <= 1 ? 0 : (dobraAtual / (total - 1));
+  // 3. Sem URL e sem screenshot: mostrar textos
+  if (!pageUrl) {
+    const textos = dobra.textos || [];
+    box.innerHTML = '<div style="padding:16px">' +
+      '<div style="font-size:12px;color:var(--t3);margin-bottom:10px;text-align:center">📋 Textos desta seção:</div>' +
+      (textos.length > 0
+        ? textos.map(t => '<div style="background:white;border:1px solid var(--b);border-radius:8px;padding:10px 13px;margin-bottom:8px;font-size:13px;">' + t + '</div>').join('')
+        : '<div style="text-align:center;color:var(--t3);padding:20px">Nenhum texto identificado</div>'
+      ) + '</div>';
+    return;
+  }
 
-  box.innerHTML = '<div class="screenshot-loading"><div class="icon">📸</div><div>Carregando screenshot...</div></div>';
+  // 4. URL existe mas sem screenshot: usar iframe
+  usarIframe(pageUrl, dobraAtual / Math.max(total - 1, 1), box);
+}
 
-  // Usar microlink.io — API gratuita de screenshots reais de páginas web
-  // Adiciona scroll para mostrar a dobra correta
-  const scrollY = Math.round(scrollPct * 3000); // estimativa de altura de página
-  const screenshotApiUrl = 'https://api.microlink.io/?url=' + encodeURIComponent(pageUrl) +
-    '&screenshot=true&meta=false&embed=screenshot.url' +
-    '&viewport.width=1280&viewport.height=800' +
-    '&scroll=' + scrollY;
-
+function mostrarImg(src, box, atual, total) {
+  box.innerHTML = '<div class="screenshot-loading"><div class="icon">📸</div><div>Carregando...</div></div>';
   const img = new Image();
   img.onload = () => {
     box.innerHTML = '';
-    img.style.cssText = 'width:100%;display:block;max-height:320px;object-fit:cover;object-position:top';
+    img.style.cssText = 'width:100%;display:block;max-height:340px;object-fit:cover;object-position:top center';
     box.appendChild(img);
+    // Label da seção sobre a imagem
+    const label = document.createElement('div');
+    label.style.cssText = 'padding:8px 14px;background:rgba(249,64,81,0.06);border-top:1px solid rgba(249,64,81,0.12);font-size:11px;color:var(--t3);text-align:center';
+    label.textContent = '📍 Seção ' + atual + ' de ' + total;
+    box.appendChild(label);
   };
   img.onerror = () => {
-    // Fallback 1: tentar sem scroll
-    const img2 = new Image();
-    img2.onload = () => {
-      box.innerHTML = '';
-      img2.style.cssText = 'width:100%;display:block;max-height:320px;object-fit:cover;object-position:' + Math.round(scrollPct * 100) + '% 0';
-      box.appendChild(img2);
-    };
-    img2.onerror = () => {
-      // Fallback 2: iframe escalado
-      usarIframe(pageUrl, scrollPct, box);
-    };
-    img2.src = 'https://api.microlink.io/?url=' + encodeURIComponent(pageUrl) + '&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=800';
+    if (sessao.pageUrl) usarIframe(sessao.pageUrl, dobraAtual / Math.max(total - 1, 1), box);
+    else box.innerHTML = '<div class="screenshot-error"><div class="icon">❌</div><div>Não foi possível carregar a visualização</div></div>';
   };
-  img.src = screenshotApiUrl;
+  img.src = src;
 }
 
 function usarIframe(pageUrl, scrollPct, box) {
-  // Iframe escalado como último recurso
+  const scrollY = Math.round(scrollPct * 3000);
   box.style.minHeight = '280px';
   box.innerHTML =
     '<div style="width:100%;height:280px;overflow:hidden;position:relative">' +
     '<iframe src="' + pageUrl + '" ' +
     'style="width:300%;height:840px;border:none;transform:scale(0.333);transform-origin:top left;pointer-events:none" ' +
     'sandbox="allow-same-origin allow-scripts" loading="lazy" ' +
-    'onload="try{this.contentWindow.scrollTo(0,' + Math.round(scrollPct * 3000) + ')}catch(e){}"></iframe>' +
-    '<div style="position:absolute;inset:0;cursor:default"></div>' +
+    'onload="try{this.contentWindow.scrollTo(0,' + scrollY + ')}catch(e){}"></iframe>' +
+    '<div style="position:absolute;inset:0"></div>' +
     '</div>' +
-    '<div style="padding:6px;text-align:center;background:white;font-size:11px;color:var(--t3)">Visualização da página — somente leitura</div>';
+    '<div style="padding:7px;text-align:center;background:white;border-top:1px solid var(--b);font-size:11px;color:var(--t3)">Visualização da página — somente leitura</div>';
 }
 
 function abrirModal(tipo) {
