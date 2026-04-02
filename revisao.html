@@ -22,7 +22,7 @@ header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;displ
 .dobra-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--t);margin-bottom:5px}
 .dobra-sub{font-size:13px;color:var(--t2)}
 
-/* PREVIEW BOX */
+/* PREVIEW - iframe escalado, funciona sempre */
 .preview-box{background:white;border:1px solid var(--b);border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
 .preview-bar{background:#e8e8f0;padding:10px 16px;display:flex;align-items:center;gap:8px}
 .dots{display:flex;gap:5px}
@@ -30,31 +30,30 @@ header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;displ
 .dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
 .preview-url{font-size:11px;color:var(--t3);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* SCREENSHOT - grande, ocupa 100% */
-.screenshot-wrap{
+/* iframe container - mostra a página real */
+.iframe-container{
   width:100%;
-  height:400px;
+  height:420px;
   overflow:hidden;
   position:relative;
   background:#e8e8f0;
 }
-.screenshot-wrap img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top; /* sobrescrito por JS */
+.iframe-container iframe{
+  width:200%;
+  height:1600px;
+  border:none;
+  transform:scale(0.5);
+  transform-origin:top left;
+  pointer-events:none;
   display:block;
-  transition:opacity .3s;
 }
-.screenshot-loading{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:#f0f0f8;color:var(--t3);gap:12px;
+.iframe-overlay{
+  position:absolute;
+  inset:0;
 }
-.loading-icon{font-size:48px;animation:bounce 1s ease-in-out infinite alternate}
-@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
-.loading-text{font-size:15px;font-weight:500;color:var(--t2)}
-.loading-sub{font-size:12px;color:var(--t3)}
+/* Fallback quando sem URL */
+.preview-textos{padding:20px}
+.texto-item{background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px}
 
 .secao-badge{padding:10px 16px;font-size:12px;color:var(--t3);text-align:center;border-top:1px solid var(--b);background:white;font-weight:500}
 
@@ -103,13 +102,11 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
 .color-row{display:flex;gap:8px;align-items:center}
 .color-pick{width:52px;height:48px;border-radius:10px;padding:3px;cursor:pointer;border:1px solid var(--b);flex-shrink:0}
 
-/* Final */
 .finalizado{text-align:center;padding:60px 20px}
 .final-icon{font-size:80px;margin-bottom:20px;animation:pop .5s ease}
 @keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
 .final-title{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-bottom:10px}
 .final-sub{font-size:15px;color:var(--t2);line-height:1.7;max-width:400px;margin:0 auto}
-
 .loading-page{text-align:center;padding:80px 20px;color:var(--t2)}
 .hidden{display:none}
 </style>
@@ -143,18 +140,9 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
           <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
           <div class="preview-url" id="previewUrl">Carregando...</div>
         </div>
-
-        <div class="screenshot-wrap" id="screenshotWrap">
-          <div class="screenshot-loading" id="screenshotLoading">
-            <span class="loading-icon">📸</span>
-            <span class="loading-text">Preparando visualização...</span>
-            <span class="loading-sub">Aguarde alguns instantes</span>
-          </div>
-          <img id="screenshotImg" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover" />
-        </div>
-
+        <!-- Preview real da página via iframe -->
+        <div id="previewArea"></div>
         <div class="secao-badge" id="secaoBadge"></div>
-
         <div class="chips-section" id="chipsSection" style="display:none">
           <div class="chips-hint">💡 Clique num texto para trocar rapidamente:</div>
           <div class="chips" id="chipsWrap"></div>
@@ -179,7 +167,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
       <div class="finalizado">
         <div class="final-icon">🎉</div>
         <div class="final-title">Revisão enviada!</div>
-        <div class="final-sub">Obrigado! Suas anotações foram salvas. O desenvolvedor vai aplicar todas as alterações em breve.</div>
+        <div class="final-sub">Obrigado! Suas anotações foram salvas. O desenvolvedor vai aplicar as alterações em breve.</div>
       </div>
     </div>
   </div>
@@ -208,12 +196,11 @@ let dobraAtual = 0;
 let anotacoes = {};
 let tipoModal = '';
 let textoAutoFill = '';
-let pollingTimer = null;
 
 async function iniciar() {
   const sid = new URLSearchParams(window.location.search).get('s');
   if (!sid) {
-    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Link inválido. Peça um novo link para o desenvolvedor.</div>';
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Link inválido.</div>';
     return;
   }
   try {
@@ -224,31 +211,9 @@ async function iniciar() {
     document.getElementById('loading-page').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     renderDobra();
-    // Polling para screenshot
-    if (!sessao.screenshotsReady) {
-      pollingTimer = setInterval(verificarScreenshot, 3000);
-    }
   } catch(e) {
-    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Sessão não encontrada ou expirada.</div>';
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Sessão não encontrada.</div>';
   }
-}
-
-async function verificarScreenshot() {
-  try {
-    const r = await fetch('/api/sessao?id=' + sessao.id);
-    const d = await r.json();
-    if (!d.success) return;
-    const s = d.sessao;
-    // Atualizar screenshot se chegou
-    if (s.screenshotPaginaUrl && !sessao.screenshotPaginaUrl) {
-      sessao.screenshotPaginaUrl = s.screenshotPaginaUrl;
-      sessao.screenshotsReady = true;
-      clearInterval(pollingTimer);
-      pollingTimer = null;
-      // Mostrar screenshot da dobra atual
-      mostrarScreenshot();
-    }
-  } catch(e) {}
 }
 
 function renderDobra() {
@@ -268,10 +233,10 @@ function renderDobra() {
   btn.textContent = isUlt ? '✅ Finalizar e enviar' : 'Próxima seção →';
   btn.classList.toggle('finalizar', isUlt);
 
-  // Screenshot
-  mostrarScreenshot();
+  // Preview
+  renderPreview(dobra, dobraAtual, total);
 
-  // Chips — só os textos desta dobra
+  // Chips — só textos desta dobra
   const chips = document.getElementById('chipsWrap');
   chips.innerHTML = '';
   const textos = dobra.textos || [];
@@ -292,30 +257,47 @@ function renderDobra() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function mostrarScreenshot() {
-  const img = document.getElementById('screenshotImg');
-  const loading = document.getElementById('screenshotLoading');
-  const dobra = sessao.dobras[dobraAtual];
-  const total = sessao.dobras.length;
+function renderPreview(dobra, dobraIdx, total) {
+  const area = document.getElementById('previewArea');
+  const pageUrl = sessao.pageUrl;
 
-  if (sessao.screenshotPaginaUrl) {
-    // Temos o screenshot da página inteira
-    // Calcular qual parte mostrar baseado na posição da dobra
-    const pct = dobra.posicaoPct !== undefined ? dobra.posicaoPct : (dobraAtual / Math.max(total - 1, 1)) * 100;
-    const objPos = 'center ' + Math.round(pct) + '%';
+  if (!pageUrl) {
+    // Sem URL: mostrar textos
+    const textos = dobra.textos || [];
+    area.innerHTML = '<div class="preview-textos">' +
+      '<div style="font-size:12px;color:var(--t3);margin-bottom:12px;text-align:center">📋 Textos desta seção:</div>' +
+      (textos.length > 0
+        ? textos.map(t => '<div class="texto-item">' + t + '</div>').join('')
+        : '<div style="text-align:center;color:var(--t3);padding:20px">Nenhum texto identificado</div>'
+      ) + '</div>';
+    return;
+  }
 
-    loading.style.display = 'none';
-    img.style.display = 'block';
-    img.style.objectPosition = objPos;
+  // Calcular scroll estimado para esta dobra
+  // Baseado no posicaoPct que vem do server (0-100)
+  const pct = dobra.posicaoPct !== undefined ? dobra.posicaoPct / 100 : (dobraIdx / Math.max(total - 1, 1));
+  const scrollY = Math.round(pct * 4000); // altura estimada ~4000px para LP típica
 
-    if (img.src !== sessao.screenshotPaginaUrl) {
-      img.src = sessao.screenshotPaginaUrl;
-    }
-  } else {
-    // Screenshot ainda não pronto
-    loading.style.display = 'flex';
-    img.style.display = 'none';
-    loading.innerHTML = '<span class="loading-icon">📸</span><span class="loading-text">Preparando visualização...</span><span class="loading-sub">Aguarde alguns instantes</span>';
+  // Iframe escalado - mostra a página real na posição certa
+  area.innerHTML =
+    '<div class="iframe-container">' +
+    '<iframe ' +
+    'id="previewIframe" ' +
+    'src="' + pageUrl + '" ' +
+    'loading="lazy" ' +
+    'onload="scrollIframe(this,' + scrollY + ')"' +
+    '></iframe>' +
+    '<div class="iframe-overlay"></div>' +
+    '</div>';
+}
+
+function scrollIframe(iframe, scrollY) {
+  // Tenta fazer scroll dentro do iframe
+  try {
+    iframe.contentWindow.scrollTo({ top: scrollY, behavior: 'instant' });
+  } catch(e) {
+    // Cross-origin: não consegue scrollar, mostra do topo
+    // Isso é normal para páginas em domínios diferentes
   }
 }
 
@@ -328,18 +310,17 @@ function abrirModal(tipo) {
   if (tipo === 'texto') {
     body = '<div style="margin-bottom:14px"><label>Texto atual</label>' +
       (opts ? '<select id="m_sel" style="margin-bottom:8px" onchange="document.getElementById(\'m_de\').value=this.value"><option value="">Selecione da lista ou escreva abaixo...</option>' + opts + '</select>' : '') +
-      '<input type="text" id="m_de" placeholder="Cole o texto exato que quer trocar..." value="' + (textoAutoFill||'').replace(/"/g,'&quot;') + '"/></div>' +
+      '<input type="text" id="m_de" placeholder="Cole o texto que quer trocar..." value="' + (textoAutoFill||'').replace(/"/g,'&quot;') + '"/></div>' +
       '<div><label>Novo texto</label><textarea id="m_para" rows="3" placeholder="Escreva como deve ficar..."></textarea></div>';
     textoAutoFill = '';
   } else if (tipo === 'cor') {
     body = '<div style="margin-bottom:14px"><label>Qual elemento?</label><input type="text" id="m_campo" placeholder="Ex: botão principal, fundo da seção, título..."/></div>' +
       '<div><label>Nova cor</label><div class="color-row"><input type="color" class="color-pick" id="m_cpick" value="#f94051" oninput="document.getElementById(\'m_cor\').value=this.value"/>' +
-      '<input type="text" id="m_cor" placeholder="#f94051 ou nome da cor" oninput="try{document.getElementById(\'m_cpick\').value=this.value}catch(e){}"/></div>' +
-      '<div style="font-size:11px;color:var(--t3);margin-top:8px">Use o seletor ou escreva: azul escuro, vermelho, verde...</div></div>';
+      '<input type="text" id="m_cor" placeholder="#f94051 ou nome da cor" oninput="try{document.getElementById(\'m_cpick\').value=this.value}catch(e){}"/></div></div>';
   } else if (tipo === 'imagem') {
-    body = '<div><label>Descreva a troca</label><textarea id="m_img" rows="4" placeholder="Ex: Trocar a foto por uma imagem de escritório moderno com pessoas trabalhando..."></textarea></div>';
+    body = '<div><label>Descreva a troca</label><textarea id="m_img" rows="4" placeholder="Ex: Trocar a foto por uma imagem de escritório moderno..."></textarea></div>';
   } else {
-    body = '<div><label>Sua observação</label><textarea id="m_obs" rows="5" placeholder="Escreva qualquer anotação sobre esta seção..."></textarea></div>';
+    body = '<div><label>Sua observação</label><textarea id="m_obs" rows="5" placeholder="Escreva qualquer anotação..."></textarea></div>';
   }
   document.getElementById('modalBody').innerHTML = body;
   document.getElementById('modal').classList.remove('hidden');
@@ -424,7 +405,6 @@ async function proximaDobra() {
   await salvarDobra();
   if (dobraAtual >= sessao.dobras.length - 1) {
     await fetch('/api/finalizar-revisao', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessaoId:sessao.id})});
-    if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
     document.getElementById('view-dobra').classList.add('hidden');
     document.getElementById('view-final').classList.remove('hidden');
     document.getElementById('navFixed').style.display = 'none';
