@@ -6,85 +6,123 @@
 <title>Revisão de Landing Page</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
-:root{--red:#f94051;--rs:rgba(249,64,81,0.08);--bg:#f8f8fc;--s:#ffffff;--s2:#f4f4f8;--b:#e8e8f0;--t:#1a1a2e;--t2:#4a4a6a;--t3:#9090a8;--g:#00c47a;--amber:#f5a623}
+:root{--red:#f94051;--rs:rgba(249,64,81,0.08);--bg:#f4f4f8;--s:#ffffff;--s2:#f0f0f5;--b:#e0e0ec;--t:#1a1a2e;--t2:#4a4a6a;--t3:#9090a8;--g:#00c47a;--amber:#f5a623;--blue:#4f8ef7}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
-header{background:white;border-bottom:1px solid var(--b);padding:14px 24px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,#f94051,#ff2040);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;font-family:'Space Grotesk',sans-serif}
+
+header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,#f94051,#ff2040);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
 .logo-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--t)}
-.progress-container{margin-left:auto;display:flex;align-items:center;gap:10px}
-.progress-text{font-size:12px;color:var(--t3)}
-.progress-bar{width:120px;height:6px;background:var(--b);border-radius:3px;overflow:hidden}
+.progress-wrap{margin-left:auto;display:flex;align-items:center;gap:10px}
+.progress-text{font-size:12px;color:var(--t3);white-space:nowrap}
+.progress-bar{width:100px;height:5px;background:var(--b);border-radius:3px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b78);border-radius:3px;transition:width .4s ease}
-.container{max-width:680px;margin:0 auto;padding:28px 20px}
-.dobra-header{text-align:center;margin-bottom:28px}
-.dobra-num{font-size:12px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-.dobra-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--t);margin-bottom:8px}
-.dobra-sub{font-size:14px;color:var(--t2)}
-.preview-box{background:white;border:1px solid var(--b);border-radius:14px;overflow:hidden;margin-bottom:24px}
-.preview-header{background:var(--s2);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--b)}
-.preview-dots{display:flex;gap:5px}
+
+.container{max-width:700px;margin:0 auto;padding:24px 16px 80px}
+
+.dobra-header{text-align:center;margin-bottom:20px}
+.dobra-num{font-size:11px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.dobra-title{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--t);margin-bottom:6px}
+.dobra-sub{font-size:13px;color:var(--t2)}
+
+/* === PREVIEW DA DOBRA === */
+.preview-wrapper{background:white;border:1px solid var(--b);border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.preview-bar{background:#e8e8f0;padding:9px 14px;display:flex;align-items:center;gap:8px}
+.preview-dots{display:flex;gap:4px}
 .dot{width:10px;height:10px;border-radius:50%}
 .dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
-.preview-url{font-size:11px;color:var(--t3);flex:1;text-align:center}
-.preview-content{padding:20px;background:var(--s2)}
-.texto-preview{background:white;border:1px solid var(--b);border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:border-color .2s}
-.texto-preview:hover{border-color:var(--red)}
-.texto-val{font-size:13px;color:var(--t);flex:1}
-.texto-badge{font-size:10px;font-weight:600;color:var(--t3);background:var(--s2);padding:2px 6px;border-radius:4px;white-space:nowrap}
-.section-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.card{background:white;border:1px solid var(--b);border-radius:14px;padding:20px;margin-bottom:16px}
-.alt-list{margin-bottom:16px}
-.alt-item{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:12px 14px;margin-bottom:8px;position:relative}
-.alt-tipo-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-bottom:8px;display:inline-block}
-.badge-texto{background:rgba(79,142,247,0.1);color:#4f8ef7}
-.badge-cor{background:rgba(245,166,35,0.1);color:var(--amber)}
-.badge-imagem{background:rgba(0,196,122,0.1);color:var(--g)}
+.preview-url-text{font-size:10px;color:var(--t3);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Screenshot da dobra */
+.preview-screenshot{width:100%;position:relative;background:#f0f0f8;min-height:200px;display:flex;align-items:center;justify-content:center}
+.preview-screenshot img{width:100%;display:block;object-fit:cover}
+.preview-screenshot.loading{min-height:220px}
+.preview-loading-text{text-align:center;color:var(--t3);font-size:13px;padding:20px}
+.preview-loading-icon{font-size:32px;margin-bottom:10px;animation:bounce 1s infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+
+/* Fallback: textos da dobra */
+.preview-textos{padding:16px}
+.texto-chip{display:inline-flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:7px 12px;margin:4px;font-size:12px;color:var(--t);cursor:pointer;transition:all .15s;max-width:100%}
+.texto-chip:hover{border-color:var(--red);background:var(--rs)}
+.texto-chip .chip-icon{font-size:10px;color:var(--t3);flex-shrink:0}
+.texto-chip .chip-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.textos-hint{font-size:11px;color:var(--t3);padding:0 16px 12px;display:flex;align-items:center;gap:5px}
+
+/* Iframe preview (alternativa) */
+.preview-iframe-wrap{width:100%;height:280px;overflow:hidden;position:relative}
+.preview-iframe{width:300%;height:800px;border:none;transform:scale(0.333);transform-origin:top left;pointer-events:none}
+.preview-iframe-overlay{position:absolute;inset:0;cursor:default}
+
+/* Anotações */
+.card{background:white;border:1px solid var(--b);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,0.04)}
+.section-label{font-size:12px;font-weight:600;color:var(--t);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.alt-list{margin-bottom:14px}
+.alt-item{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:11px 13px;margin-bottom:8px;position:relative;padding-right:36px}
+.alt-tipo-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-bottom:7px;display:inline-block}
+.badge-texto{background:rgba(79,142,247,0.12);color:var(--blue)}
+.badge-cor{background:rgba(245,166,35,0.12);color:var(--amber)}
+.badge-imagem{background:rgba(0,196,122,0.12);color:var(--g)}
 .badge-obs{background:var(--rs);color:var(--red)}
-.alt-remove{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px}
+.alt-remove{position:absolute;top:9px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:18px;line-height:1;padding:2px 5px;border-radius:4px}
 .alt-remove:hover{background:var(--b);color:var(--t)}
-.add-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.add-btn{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;background:white;border:1.5px solid var(--b);color:var(--t2);transition:all .15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.add-btn{padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;background:white;border:1.5px solid var(--b);color:var(--t2);transition:all .15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
 .add-btn:hover{border-color:var(--red);color:var(--red);background:var(--rs)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal{background:white;border-radius:16px;padding:24px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
-.modal-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:16px}
+.empty-note{text-align:center;padding:18px;color:var(--t3);font-size:13px;background:var(--s2);border-radius:10px;margin-bottom:14px}
+
+/* Nav fixo embaixo */
+.nav-fixed{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--b);padding:12px 16px;display:flex;gap:10px;z-index:100;box-shadow:0 -4px 16px rgba(0,0,0,0.08)}
+.nav-fixed .btn-back{flex:1;padding:13px;border-radius:11px;font-size:14px;font-weight:500;cursor:pointer;background:var(--s2);border:1px solid var(--b);color:var(--t2);transition:all .15s}
+.nav-fixed .btn-back:hover{background:var(--b)}
+.nav-fixed .btn-next{flex:2;padding:13px;border-radius:11px;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--red),#d92d3e);border:none;color:white;font-family:'Space Grotesk',sans-serif;transition:all .2s;box-shadow:0 4px 16px rgba(249,64,81,0.3)}
+.nav-fixed .btn-next:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(249,64,81,0.4)}
+.nav-fixed .btn-next.finalizar{background:linear-gradient(135deg,var(--g),#00a066);box-shadow:0 4px 16px rgba(0,196,122,0.3)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal{background:white;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
+.modal-handle{width:40px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;margin-bottom:16px}
 label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px}
-input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:9px;padding:10px 13px;color:var(--t);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+input,textarea,select{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:11px 13px;color:var(--t);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;-webkit-appearance:none}
 input:focus,textarea:focus{border-color:var(--red)}
-.modal-footer{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
-.btn-primary{padding:11px 22px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,var(--red),#d92d3e);color:#fff;transition:all .2s}
-.btn-primary:hover{transform:translateY(-1px)}
-.btn-secondary{padding:10px 18px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;background:var(--s2);border:1px solid var(--b);color:var(--t2);transition:all .15s}
-.btn-secondary:hover{background:var(--b)}
-.nav-buttons{display:flex;gap:10px;margin-top:24px}
-.nav-buttons .btn-secondary{flex:1;text-align:center}
-.nav-buttons .btn-primary{flex:2;text-align:center}
-.color-preview{width:24px;height:24px;border-radius:5px;border:1px solid var(--b);flex-shrink:0}
-.hidden{display:none}
+.modal-footer{display:flex;gap:8px;margin-top:18px}
+.btn-cancel{flex:1;padding:12px;border-radius:10px;font-size:14px;cursor:pointer;background:var(--s2);border:1px solid var(--b);color:var(--t2)}
+.btn-save{flex:2;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,var(--red),#d92d3e);color:white}
+.color-row{display:flex;gap:8px;align-items:center}
+.color-picker-input{width:48px;height:44px;border-radius:10px;padding:2px;cursor:pointer;border:1px solid var(--b);flex-shrink:0}
+
+/* Chips clicáveis de texto */
+.chips-wrap{display:flex;flex-wrap:wrap;padding:4px 16px 16px}
+.chip-hint{font-size:11px;color:var(--t3);padding:8px 16px 4px;width:100%}
+
+/* Finalizado */
 .finalizado{text-align:center;padding:60px 20px}
-.finalizado-icon{font-size:64px;margin-bottom:20px}
-.finalizado-title{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--t);margin-bottom:10px}
-.finalizado-sub{font-size:15px;color:var(--t2);line-height:1.7}
-.loading{text-align:center;padding:60px 20px;color:var(--t2)}
-.loading-icon{font-size:48px;margin-bottom:16px;animation:spin 2s linear infinite}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.finalizado-icon{font-size:70px;margin-bottom:20px;animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+.finalizado-title{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:10px}
+.finalizado-sub{font-size:14px;color:var(--t2);line-height:1.7;max-width:400px;margin:0 auto}
+
+.loading-page{text-align:center;padding:80px 20px;color:var(--t2)}
+.hidden{display:none}
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo-icon">E</div>
-  <span class="logo-name">Revisão de Landing Page</span>
-  <div class="progress-container">
-    <span class="progress-text" id="progressText">0 / 0</span>
+  <span class="logo-name">Revisão da Página</span>
+  <div class="progress-wrap">
+    <span class="progress-text" id="progressText"></span>
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   </div>
 </header>
 
 <div class="container">
 
-  <div id="loading" class="loading">
-    <div class="loading-icon">⏳</div>
+  <div id="loading-page" class="loading-page">
+    <div style="font-size:40px;margin-bottom:16px">⏳</div>
     <div>Carregando...</div>
   </div>
 
@@ -93,38 +131,44 @@ input:focus,textarea:focus{border-color:var(--red)}
     <!-- DOBRA ATUAL -->
     <div id="view-dobra">
       <div class="dobra-header">
-        <div class="dobra-num" id="dobraNum">Dobra 1</div>
+        <div class="dobra-num" id="dobraNum"></div>
         <div class="dobra-title" id="dobraTitle"></div>
-        <div class="dobra-sub">Faça suas anotações para esta seção da página</div>
+        <div class="dobra-sub">Veja a seção abaixo e anote o que quer mudar</div>
       </div>
 
-      <!-- Preview dos textos atuais -->
-      <div class="preview-box" id="previewBox">
-        <div class="preview-header">
+      <!-- Preview visual da dobra -->
+      <div class="preview-wrapper" id="previewWrapper">
+        <div class="preview-bar">
           <div class="preview-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-          <div class="preview-url" id="previewUrl">Textos desta seção</div>
+          <div class="preview-url-text" id="previewUrlText">Visualização da página</div>
         </div>
-        <div class="preview-content" id="previewContent"></div>
+        <!-- Screenshot ou iframe -->
+        <div id="previewVisual">
+          <div class="preview-screenshot loading" id="screenshotArea">
+            <div class="preview-loading-text">
+              <div class="preview-loading-icon">📸</div>
+              <div>Carregando visualização...</div>
+            </div>
+          </div>
+        </div>
+        <!-- Textos clicáveis para autopreenchimento -->
+        <div id="chipsArea" style="background:white;border-top:1px solid var(--b)">
+          <div class="chip-hint">💡 Clique em um texto para trocar rapidamente:</div>
+          <div class="chips-wrap" id="textosChips"></div>
+        </div>
       </div>
 
       <!-- Anotações -->
       <div class="card">
-        <div class="section-title">✏️ Suas anotações para esta dobra</div>
-
+        <div class="section-label">✏️ Suas anotações para esta seção</div>
         <div class="alt-list" id="altList">
-          <div id="altEmpty" style="text-align:center;padding:20px;color:var(--t3);font-size:13px">Nenhuma anotação ainda. Clique em um botão abaixo para adicionar.</div>
+          <div id="altEmpty" class="empty-note">Nenhuma anotação ainda.<br>Use os botões abaixo para adicionar.</div>
         </div>
-
-        <div class="add-buttons">
-          <button class="add-btn" onclick="abrirModal('texto')">💬 Trocar texto</button>
-          <button class="add-btn" onclick="abrirModal('cor')">🎨 Mudar cor</button>
-          <button class="add-btn" onclick="abrirModal('imagem')">🖼️ Trocar imagem</button>
-          <button class="add-btn" onclick="abrirModal('obs')">📝 Observação livre</button>
-        </div>
-
-        <div class="nav-buttons">
-          <button class="btn-secondary" onclick="voltarDobra()" id="btnVoltar">← Anterior</button>
-          <button class="btn-primary" onclick="proximaDobra()" id="btnProximo">Próxima dobra →</button>
+        <div class="add-grid">
+          <div class="add-btn" onclick="abrirModal('texto')">💬 Trocar texto</div>
+          <div class="add-btn" onclick="abrirModal('cor')">🎨 Mudar cor</div>
+          <div class="add-btn" onclick="abrirModal('imagem')">🖼️ Trocar imagem</div>
+          <div class="add-btn" onclick="abrirModal('obs')">📝 Observação</div>
         </div>
       </div>
     </div>
@@ -134,21 +178,28 @@ input:focus,textarea:focus{border-color:var(--red)}
       <div class="finalizado">
         <div class="finalizado-icon">🎉</div>
         <div class="finalizado-title">Revisão enviada!</div>
-        <div class="finalizado-sub">Suas anotações foram salvas com sucesso.<br>O desenvolvedor vai processar tudo e aplicar as alterações em breve.</div>
+        <div class="finalizado-sub">Suas anotações foram salvas com sucesso. O desenvolvedor vai analisar e aplicar as alterações em breve.</div>
       </div>
     </div>
-  </div>
 
+  </div>
 </div>
 
-<!-- MODAL DE ANOTAÇÃO -->
+<!-- Nav fixo -->
+<div class="nav-fixed" id="navFixed">
+  <button class="btn-back" id="btnVoltar" onclick="voltarDobra()">← Anterior</button>
+  <button class="btn-next" id="btnProximo" onclick="proximaDobra()">Próxima →</button>
+</div>
+
+<!-- Modal -->
 <div id="modal" class="modal-overlay hidden" onclick="fecharModalFora(event)">
   <div class="modal">
-    <div class="modal-title" id="modalTitle">Adicionar anotação</div>
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle"></div>
     <div id="modalBody"></div>
     <div class="modal-footer">
-      <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
-      <button class="btn-primary" onclick="salvarAnotacao()">Salvar</button>
+      <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-save" onclick="salvarAnotacao()">Salvar</button>
     </div>
   </div>
 </div>
@@ -156,27 +207,28 @@ input:focus,textarea:focus{border-color:var(--red)}
 <script>
 let sessao = null;
 let dobraAtual = 0;
-let anotacoesPorDobra = {}; // { dobraNumero: [alteracoes] }
+let anotacoesPorDobra = {};
 let tipoModal = '';
+let textoParaPreenchimento = '';
 
 // Buscar sessão
 async function iniciar() {
   const params = new URLSearchParams(window.location.search);
-  const sessaoId = params.get('s');
-  if (!sessaoId) {
-    document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:60px;color:#666"><div style="font-size:48px;margin-bottom:16px">❌</div><div>Link inválido. Peça um novo link para o desenvolvedor.</div></div>';
+  const sid = params.get('s');
+  if (!sid) {
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:40px;margin-bottom:16px">❌</div><div>Link inválido. Peça um novo link.</div>';
     return;
   }
   try {
-    const res = await fetch('/api/sessao?id=' + sessaoId);
+    const res = await fetch('/api/sessao?id=' + sid);
     const data = await res.json();
     if (!data.success) throw new Error(data.error);
     sessao = data.sessao;
-    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('loading-page').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     renderDobra();
   } catch(e) {
-    document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:60px;color:#666"><div style="font-size:48px;margin-bottom:16px">❌</div><div>Sessão não encontrada. Peça um novo link.</div></div>';
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:40px;margin-bottom:16px">❌</div><div>Sessão não encontrada.</div>';
   }
 }
 
@@ -186,34 +238,204 @@ function renderDobra() {
 
   const total = sessao.dobras.length;
   const atual = dobraAtual + 1;
+
+  // Header
   document.getElementById('progressText').textContent = atual + ' / ' + total;
   document.getElementById('progressFill').style.width = (atual / total * 100) + '%';
-  document.getElementById('dobraNum').textContent = 'Dobra ' + atual + ' de ' + total;
-  document.getElementById('dobraTitle').textContent = dobra.titulo || ('Dobra ' + atual);
-  document.getElementById('btnVoltar').style.display = dobraAtual === 0 ? 'none' : '';
+  document.getElementById('dobraNum').textContent = 'Seção ' + atual + ' de ' + total;
+  document.getElementById('dobraTitle').textContent = dobra.titulo || ('Seção ' + atual);
 
-  const isUltima = dobraAtual === total - 1;
-  document.getElementById('btnProximo').textContent = isUltima ? '✅ Finalizar e enviar' : 'Próxima dobra →';
-  document.getElementById('btnProximo').style.background = isUltima ? 'linear-gradient(135deg,var(--g),#00a066)' : '';
-
+  // URL
   if (sessao.pageUrl) {
-    document.getElementById('previewUrl').textContent = sessao.pageUrl;
+    document.getElementById('previewUrlText').textContent = sessao.pageUrl;
   }
 
-  // Mostrar textos da dobra
-  const content = document.getElementById('previewContent');
+  // Nav buttons
+  document.getElementById('btnVoltar').style.display = dobraAtual === 0 ? 'none' : '';
+  const isUltima = dobraAtual === total - 1;
+  const btnProx = document.getElementById('btnProximo');
+  btnProx.textContent = isUltima ? '✅ Finalizar e enviar' : 'Próxima seção →';
+  btnProx.classList.toggle('finalizar', isUltima);
+
+  // Carregar screenshot/iframe da dobra
+  carregarPreview(dobra, atual, total);
+
+  // Chips de texto clicáveis
+  const chipsWrap = document.getElementById('textosChips');
+  chipsWrap.innerHTML = '';
   if (dobra.textos && dobra.textos.length > 0) {
-    content.innerHTML = dobra.textos.map(t =>
-      '<div class="texto-preview">' +
-        '<div class="texto-val">' + t + '</div>' +
-        '<span class="texto-badge">Atual</span>' +
-      '</div>'
-    ).join('');
+    dobra.textos.forEach(t => {
+      const chip = document.createElement('div');
+      chip.className = 'texto-chip';
+      chip.onclick = () => abrirModalComTexto('texto', t);
+      chip.innerHTML = '<span class="chip-icon">💬</span><span class="chip-text">' + t.substring(0, 60) + (t.length > 60 ? '...' : '') + '</span>';
+      chipsWrap.appendChild(chip);
+    });
   } else {
-    content.innerHTML = '<div style="text-align:center;color:var(--t3);padding:20px;font-size:13px">Visualize a página ao lado para ver esta seção</div>';
+    document.getElementById('chipsArea').style.display = 'none';
   }
 
-  // Renderizar anotações desta dobra
+  renderAnotacoes();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function carregarPreview(dobra, atual, total) {
+  const area = document.getElementById('screenshotArea');
+
+  if (!sessao.pageUrl) {
+    // Sem URL: mostrar textos como lista
+    area.innerHTML = '<div style="padding:20px">' +
+      '<div style="font-size:12px;color:var(--t3);margin-bottom:12px;text-align:center">📋 Textos desta seção:</div>' +
+      (dobra.textos || []).map(t =>
+        '<div style="background:white;border:1px solid var(--b);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px;color:var(--t)">' + t + '</div>'
+      ).join('') +
+    '</div>';
+    return;
+  }
+
+  // Usar screenshot via API pública do site
+  // Estratégia: usar um iframe escalado para mostrar a dobra
+  // Calculamos a posição aproximada com base no número da dobra
+  const pageUrl = sessao.pageUrl;
+  const scrollPercent = (dobraAtual / (total - 1 || 1));
+
+  // Mostrar iframe escalado da página inteira com scroll na posição da dobra
+  area.innerHTML = '<div class="preview-iframe-wrap" id="iframeWrap">' +
+    '<iframe class="preview-iframe" id="previewIframe" src="' + pageUrl + '" ' +
+    'sandbox="allow-same-origin allow-scripts" ' +
+    'loading="lazy" ' +
+    'onload="iframeLoaded(' + scrollPercent + ')">' +
+    '</iframe>' +
+    '<div class="preview-iframe-overlay"></div>' +
+    '</div>' +
+    '<div style="text-align:center;padding:10px 16px 14px;background:white">' +
+    '<span style="font-size:11px;color:var(--t3)">Seção ' + atual + ' da página · Visualização somente leitura</span>' +
+    '</div>';
+
+  // Timeout: se o iframe não carregar em 5s, mostrar fallback com screenshot externo
+  setTimeout(() => {
+    const iframe = document.getElementById('previewIframe');
+    if (iframe) {
+      // Tentar screenshot via serviço gratuito como fallback
+      tentarScreenshot(pageUrl, scrollPercent, area);
+    }
+  }, 5000);
+}
+
+function iframeLoaded(scrollPercent) {
+  try {
+    const iframe = document.getElementById('previewIframe');
+    if (!iframe) return;
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    const scrollTo = Math.floor((iframeDoc.body.scrollHeight || 3000) * scrollPercent);
+    iframe.contentWindow.scrollTo(0, scrollTo);
+  } catch(e) {
+    // Cross-origin block: usar screenshot externo
+    const area = document.getElementById('screenshotArea');
+    if (area) tentarScreenshot(sessao.pageUrl, scrollPercent, area);
+  }
+}
+
+function tentarScreenshot(pageUrl, scrollPercent, area) {
+  // Usar screenshot via API gratuita do Google PageSpeed / miniatura
+  const encodedUrl = encodeURIComponent(pageUrl);
+
+  // Tentar miniatura via serviço de screenshot
+  // Usaremos o endpoint /api/screenshot que vamos criar no server
+  const screenshotUrl = '/api/screenshot?url=' + encodedUrl + '&scroll=' + Math.round(scrollPercent * 100);
+
+  area.innerHTML =
+    '<img src="' + screenshotUrl + '" ' +
+    'style="width:100%;display:block;max-height:300px;object-fit:cover;object-position:center ' + Math.round(scrollPercent * 100) + '%" ' +
+    'onerror="this.parentElement.innerHTML=\'<div style=&quot;padding:30px;text-align:center;color:var(--t3)&quot;><div style=&quot;font-size:24px;margin-bottom:8px&quot;>🌐</div><div style=&quot;font-size:12px&quot;>' + pageUrl + '</div></div>\'" />' +
+    '<div style="text-align:center;padding:8px;background:white;font-size:11px;color:var(--t3)">Visualização da página</div>';
+}
+
+function abrirModalComTexto(tipo, texto) {
+  textoParaPreenchimento = texto;
+  abrirModal(tipo);
+}
+
+function abrirModal(tipo) {
+  tipoModal = tipo;
+  const titles = { texto: '💬 Trocar texto', cor: '🎨 Mudar cor', imagem: '🖼️ Trocar imagem', obs: '📝 Observação livre' };
+  document.getElementById('modalTitle').textContent = titles[tipo];
+
+  const dobra = sessao.dobras[dobraAtual];
+  const textoOpts = (dobra.textos || []).map(t =>
+    '<option value="' + t.replace(/"/g, '&quot;') + '">' + t.substring(0, 55) + (t.length > 55 ? '...' : '') + '</option>'
+  ).join('');
+
+  let body = '';
+  if (tipo === 'texto') {
+    body = '<div style="margin-bottom:14px"><label>Texto atual</label>' +
+      (textoOpts ? '<select id="m_de_sel" style="margin-bottom:8px" onchange="document.getElementById(\'m_de\').value=this.value"><option value="">Selecione ou digite abaixo</option>' + textoOpts + '</select>' : '') +
+      '<input type="text" id="m_de" placeholder="Texto que quer trocar..." value="' + (textoParaPreenchimento || '').replace(/"/g,'&quot;') + '" /></div>' +
+      '<div><label>Novo texto</label><textarea id="m_para" rows="3" placeholder="Como deve ficar..."></textarea></div>';
+    textoParaPreenchimento = '';
+  } else if (tipo === 'cor') {
+    body = '<div style="margin-bottom:14px"><label>Qual elemento?</label>' +
+      '<input type="text" id="m_campo" placeholder="Ex: botão principal, fundo da seção, título..." /></div>' +
+      '<div><label>Nova cor</label><div class="color-row">' +
+      '<input type="color" class="color-picker-input" id="m_cor_picker" value="#f94051" oninput="document.getElementById(\'m_cor\').value=this.value" />' +
+      '<input type="text" id="m_cor" placeholder="#f94051 ou nome da cor" oninput="try{document.getElementById(\'m_cor_picker\').value=this.value}catch(e){}" /></div>' +
+      '<div style="font-size:11px;color:var(--t3);margin-top:8px">💡 Use o seletor de cor ao lado ou escreva o nome: azul, vermelho, verde...</div></div>';
+  } else if (tipo === 'imagem') {
+    body = '<div><label>Descreva a troca</label>' +
+      '<textarea id="m_img" rows="4" placeholder="Ex: Trocar a foto do hero por uma foto de uma mulher sorrindo em ambiente de trabalho. Pode ser do banco Unsplash."></textarea></div>';
+  } else {
+    body = '<div><label>Sua observação</label>' +
+      '<textarea id="m_obs" rows="4" placeholder="Qualquer anotação sobre esta seção..."></textarea></div>';
+  }
+
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    const firstInput = document.querySelector('#modalBody input, #modalBody textarea');
+    if (firstInput && tipo !== 'texto') firstInput.focus();
+    if (tipo === 'texto') {
+      const para = document.getElementById('m_para');
+      if (para) para.focus();
+    }
+  }, 100);
+}
+
+function fecharModal() {
+  document.getElementById('modal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function fecharModalFora(e) {
+  if (e.target === document.getElementById('modal')) fecharModal();
+}
+
+function salvarAnotacao() {
+  const dobraNum = dobraAtual + 1;
+  if (!anotacoesPorDobra[dobraNum]) anotacoesPorDobra[dobraNum] = [];
+  let alt = null;
+  if (tipoModal === 'texto') {
+    const de = (document.getElementById('m_de')?.value || '').trim();
+    const para = (document.getElementById('m_para')?.value || '').trim();
+    if (!de || !para) { alert('Preencha os dois campos'); return; }
+    alt = { tipo: 'texto', de, para };
+  } else if (tipoModal === 'cor') {
+    const campo = (document.getElementById('m_campo')?.value || '').trim();
+    const cor = (document.getElementById('m_cor')?.value || document.getElementById('m_cor_picker')?.value || '').trim();
+    if (!campo || !cor) { alert('Preencha o elemento e a cor'); return; }
+    alt = { tipo: 'cor', campo, cor };
+  } else if (tipoModal === 'imagem') {
+    const desc = (document.getElementById('m_img')?.value || '').trim();
+    if (!desc) { alert('Descreva a troca de imagem'); return; }
+    alt = { tipo: 'imagem', descricao: desc };
+  } else {
+    const obs = (document.getElementById('m_obs')?.value || '').trim();
+    if (!obs) { alert('Escreva sua observação'); return; }
+    alt = { tipo: 'obs', texto: obs };
+  }
+  anotacoesPorDobra[dobraNum].push(alt);
+  fecharModal();
   renderAnotacoes();
 }
 
@@ -222,44 +444,26 @@ function renderAnotacoes() {
   const alts = anotacoesPorDobra[dobraNum] || [];
   const list = document.getElementById('altList');
   const empty = document.getElementById('altEmpty');
-
-  if (alts.length === 0) {
-    if (empty) empty.style.display = 'block';
-    // Remover itens anteriores
-    Array.from(list.children).forEach(c => { if (c.id !== 'altEmpty') c.remove(); });
-    return;
-  }
-  if (empty) empty.style.display = 'none';
-
-  // Manter apenas o empty e recriar
+  if (empty) empty.style.display = alts.length === 0 ? 'block' : 'none';
   Array.from(list.children).forEach(c => { if (c.id !== 'altEmpty') c.remove(); });
-
   alts.forEach((alt, i) => {
     const div = document.createElement('div');
     div.className = 'alt-item';
-    let badgeClass = 'badge-obs';
-    let badgeText = 'Observação';
-    let content = '';
-
+    let badge = '', content = '';
     if (alt.tipo === 'texto') {
-      badgeClass = 'badge-texto'; badgeText = '💬 Texto';
-      content = '<div style="font-size:12px;color:var(--t3);margin-bottom:4px">DE: "' + alt.de + '"</div>' +
-                '<div style="font-size:13px;color:var(--t);font-weight:500">PARA: "' + alt.para + '"</div>';
+      badge = '<span class="alt-tipo-badge badge-texto">💬 Trocar texto</span>';
+      content = '<div style="font-size:12px;color:var(--t3);margin-bottom:4px">De: "' + alt.de + '"</div><div style="font-size:13px;font-weight:500;color:var(--t)">Para: "' + alt.para + '"</div>';
     } else if (alt.tipo === 'cor') {
-      badgeClass = 'badge-cor'; badgeText = '🎨 Cor';
-      content = '<div style="display:flex;align-items:center;gap:8px">' +
-        '<div class="color-preview" style="background:' + alt.cor + '"></div>' +
-        '<div style="font-size:13px;color:var(--t)">' + alt.campo + ': ' + alt.cor + '</div>' +
-      '</div>';
+      badge = '<span class="alt-tipo-badge badge-cor">🎨 Mudar cor</span>';
+      content = '<div style="display:flex;align-items:center;gap:8px"><div style="width:20px;height:20px;border-radius:5px;background:' + alt.cor + ';border:1px solid var(--b);flex-shrink:0"></div><div style="font-size:13px;color:var(--t)">' + alt.campo + ': <strong>' + alt.cor + '</strong></div></div>';
     } else if (alt.tipo === 'imagem') {
-      badgeClass = 'badge-imagem'; badgeText = '🖼️ Imagem';
+      badge = '<span class="alt-tipo-badge badge-imagem">🖼️ Trocar imagem</span>';
       content = '<div style="font-size:13px;color:var(--t)">' + alt.descricao + '</div>';
     } else {
+      badge = '<span class="alt-tipo-badge badge-obs">📝 Observação</span>';
       content = '<div style="font-size:13px;color:var(--t)">' + alt.texto + '</div>';
     }
-
-    div.innerHTML = '<button class="alt-remove" onclick="removerAlt(' + i + ')">×</button>' +
-      '<span class="alt-tipo-badge ' + badgeClass + '">' + badgeText + '</span>' + content;
+    div.innerHTML = '<button class="alt-remove" onclick="removerAlt(' + i + ')">×</button>' + badge + content;
     list.appendChild(div);
   });
 }
@@ -270,140 +474,34 @@ function removerAlt(idx) {
   renderAnotacoes();
 }
 
-// Modal
-function abrirModal(tipo) {
-  tipoModal = tipo;
-  const titles = { texto: '💬 Trocar texto', cor: '🎨 Mudar cor', imagem: '🖼️ Trocar imagem', obs: '📝 Observação livre' };
-  document.getElementById('modalTitle').textContent = titles[tipo];
-
-  const dobra = sessao.dobras[dobraAtual];
-  const textoOptions = (dobra.textos || []).map((t, i) =>
-    '<option value="' + t.replace(/"/g, '&quot;') + '">' + t.substring(0, 60) + (t.length > 60 ? '...' : '') + '</option>'
-  ).join('');
-
-  let body = '';
-  if (tipo === 'texto') {
-    body = '<div style="margin-bottom:12px"><label>Texto atual (selecione ou cole)</label>' +
-      (textoOptions ? '<select id="m_de" style="margin-bottom:8px"><option value="">Selecione um texto</option>' + textoOptions + '</select>' : '') +
-      '<input type="text" id="m_de_custom" placeholder="Ou cole o texto atual aqui..." /></div>' +
-      '<div><label>Novo texto</label><textarea id="m_para" rows="3" placeholder="Digite o novo texto..."></textarea></div>';
-  } else if (tipo === 'cor') {
-    body = '<div style="margin-bottom:12px"><label>Qual elemento mudar?</label>' +
-      '<input type="text" id="m_campo" placeholder="Ex: fundo do botão, cor do título, background da seção..." /></div>' +
-      '<div><label>Nova cor</label><div style="display:flex;gap:8px">' +
-      '<input type="color" id="m_cor_picker" style="width:48px;height:40px;border-radius:8px;padding:2px;cursor:pointer;flex-shrink:0" />' +
-      '<input type="text" id="m_cor" placeholder="#f94051 ou rgba(249,64,81,1)" /></div></div>';
-  } else if (tipo === 'imagem') {
-    body = '<div><label>Descreva a troca de imagem</label>' +
-      '<textarea id="m_img" rows="3" placeholder="Ex: Trocar a foto do hero pela foto do produto. A nova imagem é uma foto de uma mulher sorrindo..."></textarea></div>';
-  } else {
-    body = '<div><label>Sua observação</label>' +
-      '<textarea id="m_obs" rows="4" placeholder="Escreva qualquer observação sobre esta dobra..."></textarea></div>';
-  }
-
-  document.getElementById('modalBody').innerHTML = body;
-
-  // Sincronizar color picker com input text
-  if (tipo === 'cor') {
-    setTimeout(() => {
-      const picker = document.getElementById('m_cor_picker');
-      const text = document.getElementById('m_cor');
-      picker.addEventListener('input', () => { text.value = picker.value; });
-      text.addEventListener('input', () => { if (/^#[0-9a-fA-F]{6}$/.test(text.value)) picker.value = text.value; });
-    }, 50);
-
-    // Sincronizar select com input
-    setTimeout(() => {
-      const sel = document.getElementById('m_de');
-      const inp = document.getElementById('m_de_custom');
-      if (sel && inp) sel.addEventListener('change', () => { inp.value = sel.value; });
-    }, 50);
-  }
-
-  if (tipo === 'texto') {
-    setTimeout(() => {
-      const sel = document.getElementById('m_de');
-      const inp = document.getElementById('m_de_custom');
-      if (sel && inp) sel.addEventListener('change', () => { inp.value = sel.value; });
-    }, 50);
-  }
-
-  document.getElementById('modal').classList.remove('hidden');
-}
-
-function fecharModal() {
-  document.getElementById('modal').classList.add('hidden');
-}
-
-function fecharModalFora(e) {
-  if (e.target === document.getElementById('modal')) fecharModal();
-}
-
-function salvarAnotacao() {
-  const dobraNum = dobraAtual + 1;
-  if (!anotacoesPorDobra[dobraNum]) anotacoesPorDobra[dobraNum] = [];
-
-  let alt = null;
-  if (tipoModal === 'texto') {
-    const de = document.getElementById('m_de_custom')?.value.trim() || document.getElementById('m_de')?.value.trim() || '';
-    const para = document.getElementById('m_para')?.value.trim() || '';
-    if (!de || !para) { alert('Preencha o texto atual e o novo texto'); return; }
-    alt = { tipo: 'texto', de, para };
-  } else if (tipoModal === 'cor') {
-    const campo = document.getElementById('m_campo')?.value.trim() || '';
-    const cor = document.getElementById('m_cor')?.value.trim() || '';
-    if (!campo || !cor) { alert('Preencha o elemento e a cor'); return; }
-    alt = { tipo: 'cor', campo, cor };
-  } else if (tipoModal === 'imagem') {
-    const descricao = document.getElementById('m_img')?.value.trim() || '';
-    if (!descricao) { alert('Descreva a troca de imagem'); return; }
-    alt = { tipo: 'imagem', descricao };
-  } else {
-    const texto = document.getElementById('m_obs')?.value.trim() || '';
-    if (!texto) { alert('Escreva sua observação'); return; }
-    alt = { tipo: 'obs', texto };
-  }
-
-  anotacoesPorDobra[dobraNum].push(alt);
-  fecharModal();
-  renderAnotacoes();
-}
-
 async function salvarDobra() {
   const dobraNum = dobraAtual + 1;
-  const revisoes = anotacoesPorDobra[dobraNum] || [];
-
   await fetch('/api/revisar-dobra', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sessaoId: sessao.id, dobraNumero: dobraNum, revisoes })
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessaoId: sessao.id, dobraNumero: dobraNum, revisoes: anotacoesPorDobra[dobraNum] || [] })
   });
 }
 
 async function proximaDobra() {
   await salvarDobra();
-
   if (dobraAtual >= sessao.dobras.length - 1) {
-    // Finalizar
     await fetch('/api/finalizar-revisao', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sessaoId: sessao.id })
     });
     document.getElementById('view-dobra').classList.add('hidden');
     document.getElementById('view-finalizado').classList.remove('hidden');
+    document.getElementById('navFixed').style.display = 'none';
     document.getElementById('progressFill').style.width = '100%';
     return;
   }
-
   dobraAtual++;
   renderDobra();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function voltarDobra() {
   await salvarDobra();
-  if (dobraAtual > 0) { dobraAtual--; renderDobra(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  if (dobraAtual > 0) { dobraAtual--; renderDobra(); }
 }
 
 iniciar();
