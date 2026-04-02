@@ -9,65 +9,52 @@
 :root{--red:#f94051;--rs:rgba(249,64,81,0.08);--bg:#f4f4f8;--s:#fff;--s2:#f0f0f5;--b:#e0e0ec;--t:#1a1a2e;--t2:#4a4a6a;--t3:#9090a8;--g:#00c47a;--amber:#f5a623;--blue:#4f8ef7}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
-header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+
+/* HEADER */
+header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;gap:10px;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
 .logo-icon{width:30px;height:30px;background:linear-gradient(135deg,#f94051,#ff2040);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;font-family:'Space Grotesk',sans-serif;flex-shrink:0}
 .logo-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--t)}
-.prog-wrap{margin-left:auto;display:flex;align-items:center;gap:10px}
-.prog-text{font-size:12px;color:var(--t3);white-space:nowrap;font-weight:500}
-.prog-bar{width:120px;height:6px;background:var(--b);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b78);border-radius:3px;transition:width .4s}
-.container{max-width:720px;margin:0 auto;padding:24px 16px 100px}
-.dobra-header{text-align:center;margin-bottom:20px}
-.dobra-num{font-size:11px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
-.dobra-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--t);margin-bottom:5px}
-.dobra-sub{font-size:13px;color:var(--t2)}
+.header-badge{margin-left:auto;background:var(--rs);border:1px solid rgba(249,64,81,.3);color:var(--red);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
 
-/* PREVIEW - iframe escalado, funciona sempre */
-.preview-box{background:white;border:1px solid var(--b);border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
-.preview-bar{background:#e8e8f0;padding:10px 16px;display:flex;align-items:center;gap:8px}
-.dots{display:flex;gap:5px}
-.dot{width:12px;height:12px;border-radius:50%}
-.dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
-.preview-url{font-size:11px;color:var(--t3);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* STEP 1 — Seleção de seção */
+#step1{padding-top:70px}
+.step-intro{background:linear-gradient(135deg,rgba(249,64,81,.06),transparent);border-bottom:1px solid var(--b);padding:24px 20px;text-align:center}
+.step-intro h1{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--t);margin-bottom:6px}
+.step-intro p{font-size:13px;color:var(--t2);line-height:1.6;max-width:480px;margin:0 auto}
 
-/* iframe container - mostra a página real */
-.iframe-container{
-  width:100%;
-  height:420px;
-  overflow:hidden;
-  position:relative;
-  background:#e8e8f0;
-}
-.iframe-container iframe{
-  width:200%;
-  height:1600px;
-  border:none;
-  transform:scale(0.5);
-  transform-origin:top left;
-  pointer-events:none;
-  display:block;
-}
-.iframe-overlay{
-  position:absolute;
-  inset:0;
-}
-/* Fallback quando sem URL */
-.preview-textos{padding:20px}
-.texto-item{background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px}
+/* PAGE PREVIEW — mostra a página real em lista de seções */
+.sections-list{max-width:720px;margin:0 auto;padding:20px 16px 100px}
+.section-card{background:white;border:2px solid var(--b);border-radius:14px;margin-bottom:14px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative}
+.section-card:hover{border-color:var(--red);box-shadow:0 4px 20px rgba(249,64,81,.12)}
+.section-card.selected{border-color:var(--red);box-shadow:0 4px 24px rgba(249,64,81,.2)}
+.section-header{padding:14px 18px;display:flex;align-items:center;gap:12px;background:var(--s2);border-bottom:1px solid var(--b)}
+.section-num{width:28px;height:28px;border-radius:8px;background:var(--b);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--t3);flex-shrink:0;transition:.2s}
+.section-card.selected .section-num{background:var(--red);color:white}
+.section-name{font-size:14px;font-weight:600;color:var(--t)}
+.section-count{margin-left:auto;font-size:11px;color:var(--t3)}
+.section-textos{padding:14px 18px}
+.texto-chip{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:5px 10px;font-size:12px;color:var(--t2);margin:3px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.selected-check{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;background:var(--red);display:none;align-items:center;justify-content:center;color:white;font-size:12px}
+.section-card.selected .selected-check{display:flex}
 
-.secao-badge{padding:10px 16px;font-size:12px;color:var(--t3);text-align:center;border-top:1px solid var(--b);background:white;font-weight:500}
+/* STEP 2 — Anotações */
+#step2{display:none;padding-top:70px}
+.step2-header{padding:20px;background:white;border-bottom:1px solid var(--b);position:sticky;top:58px;z-index:100}
+.step2-secao{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--t);margin-bottom:4px}
+.step2-sub{font-size:12px;color:var(--t3)}
+.step2-content{max-width:720px;margin:0 auto;padding:20px 16px 100px}
 
-/* Chips */
-.chips-section{padding:14px 16px;background:white;border-top:1px solid var(--b)}
-.chips-hint{font-size:11px;color:var(--t3);margin-bottom:10px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:7px 13px;font-size:12px;color:var(--t2);cursor:pointer;transition:.15s;max-width:260px}
-.chip:hover{border-color:var(--red);color:var(--red);background:var(--rs)}
-.chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Textos da seção */
+.textos-section{background:white;border:1px solid var(--b);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+.textos-title{font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.texto-btn{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border:1px solid var(--b);border-radius:9px;margin-bottom:8px;cursor:pointer;transition:.15s;width:100%;text-align:left}
+.texto-btn:hover{border-color:var(--red);background:var(--rs)}
+.texto-btn .t-text{font-size:13px;color:var(--t);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.texto-btn .t-icon{font-size:14px;flex-shrink:0}
 
-/* Cards */
-.card{background:white;border:1px solid var(--b);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,0.04)}
-.section-label{font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px}
+/* Anotações */
+.anotacoes-section{background:white;border:1px solid var(--b);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+.anotacoes-title{font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
 .alt-item{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:11px 13px;margin-bottom:8px;position:relative;padding-right:40px}
 .badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin-bottom:7px;display:inline-block}
 .b-texto{background:rgba(79,142,247,.12);color:var(--blue)}
@@ -76,20 +63,35 @@ header{background:white;border-bottom:1px solid var(--b);padding:12px 20px;displ
 .b-obs{background:var(--rs);color:var(--red)}
 .alt-del{position:absolute;top:9px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;border-radius:4px}
 .alt-del:hover{background:var(--b);color:var(--t)}
-.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.empty-note{text-align:center;padding:20px;color:var(--t3);font-size:13px;background:var(--s2);border-radius:10px;line-height:1.7}
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .add-btn{padding:12px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;background:white;border:1.5px solid var(--b);color:var(--t2);transition:.15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
 .add-btn:hover{border-color:var(--red);color:var(--red);background:var(--rs)}
-.empty-note{text-align:center;padding:20px;color:var(--t3);font-size:13px;background:var(--s2);border-radius:10px;margin-bottom:12px;line-height:1.7}
 
-/* Nav */
-.nav-fixed{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--b);padding:12px 16px;display:flex;gap:10px;z-index:100;box-shadow:0 -4px 16px rgba(0,0,0,0.08)}
+/* STEP 3 — Finalizado */
+#step3{display:none;padding-top:70px;text-align:center;padding:120px 20px 40px}
+.final-icon{font-size:80px;margin-bottom:20px;animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+.final-title{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-bottom:10px}
+.final-sub{font-size:15px;color:var(--t2);line-height:1.7;max-width:400px;margin:0 auto 28px}
+
+/* Resumo das anotações */
+.resumo-card{background:white;border:1px solid var(--b);border-radius:14px;padding:18px;max-width:500px;margin:0 auto 20px;text-align:left}
+.resumo-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px}
+.resumo-item{padding:8px 0;border-bottom:1px solid var(--b);font-size:13px;color:var(--t2)}
+.resumo-item:last-child{border:none}
+
+/* NAV FIXO */
+.nav-fixed{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--b);padding:12px 16px;z-index:1000;box-shadow:0 -4px 16px rgba(0,0,0,0.08)}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;gap:10px}
 .btn-back{flex:1;padding:14px;border-radius:11px;font-size:14px;font-weight:500;cursor:pointer;background:var(--s2);border:1px solid var(--b);color:var(--t2)}
-.btn-next{flex:2;padding:14px;border-radius:11px;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--red),#d92d3e);border:none;color:white;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 16px rgba(249,64,81,.3);transition:.2s}
-.btn-next:hover{transform:translateY(-1px)}
-.btn-next.finalizar{background:linear-gradient(135deg,var(--g),#00a066);box-shadow:0 4px 16px rgba(0,196,122,.3)}
+.btn-primary{flex:2;padding:14px;border-radius:11px;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--red),#d92d3e);border:none;color:white;font-family:'Space Grotesk',sans-serif;box-shadow:0 4px 16px rgba(249,64,81,.3);transition:.2s}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-primary.green{background:linear-gradient(135deg,var(--g),#00a066);box-shadow:0 4px 16px rgba(0,196,122,.3)}
 
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:flex-end;justify-content:center}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:flex-end;justify-content:center}
 .modal{background:white;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto}
 .modal-handle{width:40px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 16px}
 .modal-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin-bottom:16px}
@@ -102,82 +104,78 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
 .color-row{display:flex;gap:8px;align-items:center}
 .color-pick{width:52px;height:48px;border-radius:10px;padding:3px;cursor:pointer;border:1px solid var(--b);flex-shrink:0}
 
-.finalizado{text-align:center;padding:60px 20px}
-.final-icon{font-size:80px;margin-bottom:20px;animation:pop .5s ease}
-@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
-.final-title{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-bottom:10px}
-.final-sub{font-size:15px;color:var(--t2);line-height:1.7;max-width:400px;margin:0 auto}
-.loading-page{text-align:center;padding:80px 20px;color:var(--t2)}
+.loading-page{position:fixed;inset:0;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999}
 .hidden{display:none}
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo-icon">E</div>
   <span class="logo-name">Revisão da Página</span>
-  <div class="prog-wrap">
-    <span class="prog-text" id="progText"></span>
-    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-  </div>
+  <span class="header-badge" id="headerBadge">Selecione uma seção</span>
 </header>
 
-<div class="container">
-  <div id="loading-page" class="loading-page">
-    <div style="font-size:50px;margin-bottom:16px">⏳</div>
-    <div style="font-size:16px;font-weight:500">Carregando...</div>
+<!-- LOADING -->
+<div id="loading-page" class="loading-page">
+  <div style="font-size:50px">⏳</div>
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;color:#1a1a2e">Carregando...</div>
+</div>
+
+<!-- STEP 1: Seleção de seção -->
+<div id="step1">
+  <div class="step-intro">
+    <h1>Selecione a seção que quer alterar</h1>
+    <p>Clique em uma seção abaixo para ver os textos dela e fazer suas anotações de alteração.</p>
   </div>
+  <div class="sections-list" id="sectionsList"></div>
+</div>
 
-  <div id="app" class="hidden">
-    <div id="view-dobra">
-      <div class="dobra-header">
-        <div class="dobra-num" id="dobraNum"></div>
-        <div class="dobra-title" id="dobraTitle"></div>
-        <div class="dobra-sub">Veja a seção abaixo e anote o que quer mudar</div>
-      </div>
-
-      <div class="preview-box">
-        <div class="preview-bar">
-          <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
-          <div class="preview-url" id="previewUrl">Carregando...</div>
-        </div>
-        <!-- Preview real da página via iframe -->
-        <div id="previewArea"></div>
-        <div class="secao-badge" id="secaoBadge"></div>
-        <div class="chips-section" id="chipsSection" style="display:none">
-          <div class="chips-hint">💡 Clique num texto para trocar rapidamente:</div>
-          <div class="chips" id="chipsWrap"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="section-label">✏️ Anotações para esta seção</div>
-        <div id="altList">
-          <div id="altEmpty" class="empty-note">Nenhuma anotação ainda.<br>Use os botões abaixo para adicionar.</div>
-        </div>
-        <div class="add-grid">
-          <div class="add-btn" onclick="abrirModal('texto')">💬 Trocar texto</div>
-          <div class="add-btn" onclick="abrirModal('cor')">🎨 Mudar cor</div>
-          <div class="add-btn" onclick="abrirModal('imagem')">🖼️ Trocar imagem</div>
-          <div class="add-btn" onclick="abrirModal('obs')">📝 Observação</div>
-        </div>
-      </div>
+<!-- STEP 2: Anotações -->
+<div id="step2">
+  <div class="step2-header">
+    <div class="step2-secao" id="step2Title"></div>
+    <div class="step2-sub" id="step2Sub"></div>
+  </div>
+  <div class="step2-content">
+    <div class="textos-section" id="textosSection">
+      <div class="textos-title">💡 Textos desta seção — clique para trocar</div>
+      <div id="textosList"></div>
     </div>
-
-    <div id="view-final" class="hidden">
-      <div class="finalizado">
-        <div class="final-icon">🎉</div>
-        <div class="final-title">Revisão enviada!</div>
-        <div class="final-sub">Obrigado! Suas anotações foram salvas. O desenvolvedor vai aplicar as alterações em breve.</div>
+    <div class="anotacoes-section">
+      <div class="anotacoes-title">✏️ Suas anotações</div>
+      <div id="altList">
+        <div id="altEmpty" class="empty-note">Nenhuma anotação ainda.<br>Use os botões abaixo.</div>
+      </div>
+      <div class="add-grid" style="margin-top:12px">
+        <div class="add-btn" onclick="abrirModal('texto')">💬 Trocar texto</div>
+        <div class="add-btn" onclick="abrirModal('cor')">🎨 Mudar cor</div>
+        <div class="add-btn" onclick="abrirModal('imagem')">🖼️ Trocar imagem</div>
+        <div class="add-btn" onclick="abrirModal('obs')">📝 Observação</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="nav-fixed" id="navFixed">
-  <button class="btn-back" id="btnBack" onclick="voltarDobra()">← Anterior</button>
-  <button class="btn-next" id="btnNext" onclick="proximaDobra()">Próxima →</button>
+<!-- STEP 3: Finalizado -->
+<div id="step3">
+  <div class="final-icon">🎉</div>
+  <div class="final-title">Revisão enviada!</div>
+  <div class="final-sub">Suas anotações foram salvas com sucesso. O desenvolvedor vai aplicar todas as alterações em breve.</div>
+  <div class="resumo-card" id="resumoCard" style="display:none">
+    <div class="resumo-title">📋 Resumo das alterações</div>
+    <div id="resumoList"></div>
+  </div>
 </div>
 
+<!-- NAV -->
+<div class="nav-fixed">
+  <div class="nav-inner" id="navInner">
+    <button class="btn-primary" id="btnMain" disabled onclick="handleMain()">Selecione uma seção</button>
+  </div>
+</div>
+
+<!-- MODAL -->
 <div id="modal" class="modal-overlay hidden" onclick="fecharModalFora(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -192,15 +190,16 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(249
 
 <script>
 let sessao = null;
-let dobraAtual = 0;
-let anotacoes = {};
+let dobraAtual = null; // índice da dobra selecionada
+let anotacoes = {}; // { dobraIdx: [alts] }
 let tipoModal = '';
 let textoAutoFill = '';
+let step = 1;
 
 async function iniciar() {
   const sid = new URLSearchParams(window.location.search).get('s');
   if (!sid) {
-    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Link inválido.</div>';
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px">❌</div><div style="font-size:16px;color:#666;margin-top:16px">Link inválido.</div>';
     return;
   }
   try {
@@ -209,102 +208,174 @@ async function iniciar() {
     if (!d.success) throw new Error(d.error);
     sessao = d.sessao;
     document.getElementById('loading-page').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    renderDobra();
+    renderSections();
   } catch(e) {
-    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px;margin-bottom:16px">❌</div><div>Sessão não encontrada.</div>';
+    document.getElementById('loading-page').innerHTML = '<div style="font-size:48px">❌</div><div style="font-size:16px;color:#666;margin-top:16px">Sessão não encontrada.</div>';
   }
 }
 
-function renderDobra() {
+function renderSections() {
+  const list = document.getElementById('sectionsList');
+  list.innerHTML = '';
+  sessao.dobras.forEach((dobra, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-card';
+    div.id = 'scard-' + i;
+    div.onclick = () => selecionarDobra(i);
+
+    const textos = (dobra.textos || []).slice(0, 5);
+    const chipsHtml = textos.map(t =>
+      '<span class="texto-chip">💬 ' + t.substring(0, 40) + (t.length > 40 ? '...' : '') + '</span>'
+    ).join('');
+
+    div.innerHTML =
+      '<div class="selected-check">✓</div>' +
+      '<div class="section-header">' +
+        '<div class="section-num">' + (i + 1) + '</div>' +
+        '<div class="section-name">' + (dobra.titulo || 'Seção ' + (i+1)) + '</div>' +
+        '<div class="section-count">' + (dobra.textos||[]).length + ' texto(s)</div>' +
+      '</div>' +
+      (textos.length > 0 ? '<div class="section-textos">' + chipsHtml + '</div>' : '') +
+      (anotacoes[i] && anotacoes[i].length > 0
+        ? '<div style="padding:8px 18px;background:rgba(249,64,81,.04);border-top:1px solid var(--b);font-size:12px;color:var(--red);font-weight:500">✏️ ' + anotacoes[i].length + ' anotação(ões) adicionada(s)</div>'
+        : ''
+      );
+    list.appendChild(div);
+  });
+
+  // Nav step 1
+  document.getElementById('navInner').innerHTML =
+    '<button class="btn-primary" id="btnMain" disabled onclick="handleMain()">Selecione uma seção</button>';
+}
+
+function selecionarDobra(idx) {
+  // Desmarcar anterior
+  document.querySelectorAll('.section-card').forEach(c => c.classList.remove('selected'));
+  // Marcar nova
+  const card = document.getElementById('scard-' + idx);
+  if (card) card.classList.add('selected');
+  dobraAtual = idx;
+
+  // Habilitar botão
+  const btn = document.getElementById('btnMain');
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = 'Anotar alterações desta seção →';
+  }
+}
+
+function irParaStep2() {
+  if (dobraAtual === null) return;
+  step = 2;
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+
   const dobra = sessao.dobras[dobraAtual];
   const total = sessao.dobras.length;
-  const atual = dobraAtual + 1;
+  document.getElementById('step2Title').textContent = (dobra.titulo || 'Seção ' + (dobraAtual + 1));
+  document.getElementById('step2Sub').textContent = 'Seção ' + (dobraAtual + 1) + ' de ' + total + ' · Adicione suas anotações';
+  document.getElementById('headerBadge').textContent = 'Seção ' + (dobraAtual + 1) + ' de ' + total;
 
-  document.getElementById('progText').textContent = atual + ' / ' + total;
-  document.getElementById('progFill').style.width = (atual / total * 100) + '%';
-  document.getElementById('dobraNum').textContent = 'SEÇÃO ' + atual + ' DE ' + total;
-  document.getElementById('dobraTitle').textContent = dobra.titulo || ('Seção ' + atual);
-  document.getElementById('previewUrl').textContent = sessao.pageUrl || 'Visualização';
-  document.getElementById('secaoBadge').textContent = '📍 Seção ' + atual + ' de ' + total + (dobra.titulo ? ' · ' + dobra.titulo : '');
-  document.getElementById('btnBack').style.display = dobraAtual === 0 ? 'none' : '';
-  const isUlt = dobraAtual === total - 1;
-  const btn = document.getElementById('btnNext');
-  btn.textContent = isUlt ? '✅ Finalizar e enviar' : 'Próxima seção →';
-  btn.classList.toggle('finalizar', isUlt);
-
-  // Preview
-  renderPreview(dobra, dobraAtual, total);
-
-  // Chips — só textos desta dobra
-  const chips = document.getElementById('chipsWrap');
-  chips.innerHTML = '';
+  // Textos clicáveis
+  const textosList = document.getElementById('textosList');
   const textos = dobra.textos || [];
   if (textos.length > 0) {
-    textos.forEach(t => {
-      const c = document.createElement('div');
-      c.className = 'chip';
-      c.onclick = () => { textoAutoFill = t; abrirModal('texto'); };
-      c.innerHTML = '💬 <span>' + t.substring(0, 50) + (t.length > 50 ? '...' : '') + '</span>';
-      chips.appendChild(c);
-    });
-    document.getElementById('chipsSection').style.display = '';
+    textosList.innerHTML = textos.map(t =>
+      '<div class="texto-btn" onclick="clicarTexto(\'' + t.replace(/'/g, "\\'").substring(0, 100) + '\')">' +
+      '<span class="t-icon">💬</span>' +
+      '<span class="t-text">' + t + '</span>' +
+      '<span style="font-size:11px;color:var(--t3);flex-shrink:0;margin-left:8px">Trocar →</span>' +
+      '</div>'
+    ).join('');
+    document.getElementById('textosSection').style.display = '';
   } else {
-    document.getElementById('chipsSection').style.display = 'none';
+    document.getElementById('textosSection').style.display = 'none';
   }
 
   renderAnotacoes();
+
+  // Nav step 2
+  document.getElementById('navInner').innerHTML =
+    '<button class="btn-back" onclick="voltarStep1()">← Voltar</button>' +
+    '<button class="btn-primary" onclick="salvarEVoltar()">Salvar e voltar →</button>';
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function renderPreview(dobra, dobraIdx, total) {
-  const area = document.getElementById('previewArea');
-  const pageUrl = sessao.pageUrl;
-
-  if (!pageUrl) {
-    // Sem URL: mostrar textos
-    const textos = dobra.textos || [];
-    area.innerHTML = '<div class="preview-textos">' +
-      '<div style="font-size:12px;color:var(--t3);margin-bottom:12px;text-align:center">📋 Textos desta seção:</div>' +
-      (textos.length > 0
-        ? textos.map(t => '<div class="texto-item">' + t + '</div>').join('')
-        : '<div style="text-align:center;color:var(--t3);padding:20px">Nenhum texto identificado</div>'
-      ) + '</div>';
-    return;
-  }
-
-  // Calcular scroll estimado para esta dobra
-  // Baseado no posicaoPct que vem do server (0-100)
-  const pct = dobra.posicaoPct !== undefined ? dobra.posicaoPct / 100 : (dobraIdx / Math.max(total - 1, 1));
-  const scrollY = Math.round(pct * 4000); // altura estimada ~4000px para LP típica
-
-  // Iframe escalado - mostra a página real na posição certa
-  area.innerHTML =
-    '<div class="iframe-container">' +
-    '<iframe ' +
-    'id="previewIframe" ' +
-    'src="' + pageUrl + '" ' +
-    'loading="lazy" ' +
-    'onload="scrollIframe(this,' + scrollY + ')"' +
-    '></iframe>' +
-    '<div class="iframe-overlay"></div>' +
-    '</div>';
+function clicarTexto(texto) {
+  textoAutoFill = texto;
+  abrirModal('texto');
 }
 
-function scrollIframe(iframe, scrollY) {
-  // Tenta fazer scroll dentro do iframe
-  try {
-    iframe.contentWindow.scrollTo({ top: scrollY, behavior: 'instant' });
-  } catch(e) {
-    // Cross-origin: não consegue scrollar, mostra do topo
-    // Isso é normal para páginas em domínios diferentes
+function voltarStep1() {
+  step = 1;
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('headerBadge').textContent = 'Selecione uma seção';
+  renderSections(); // atualizar contagem de anotações
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function salvarEVoltar() {
+  // Salvar anotações desta dobra
+  const alts = anotacoes[dobraAtual] || [];
+  await fetch('/api/revisar-dobra', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessaoId: sessao.id, dobraNumero: dobraAtual + 1, revisoes: alts })
+  });
+  voltarStep1();
+}
+
+async function handleMain() {
+  if (step === 1) {
+    if (dobraAtual === null) return;
+    irParaStep2();
+  }
+}
+
+async function finalizar() {
+  // Salvar todas as anotações pendentes
+  for (const [idx, alts] of Object.entries(anotacoes)) {
+    if (alts && alts.length > 0) {
+      await fetch('/api/revisar-dobra', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessaoId: sessao.id, dobraNumero: parseInt(idx) + 1, revisoes: alts })
+      });
+    }
+  }
+  await fetch('/api/finalizar-revisao', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessaoId: sessao.id })
+  });
+
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'block';
+  document.querySelector('.nav-fixed').style.display = 'none';
+  document.getElementById('headerBadge').textContent = '✓ Concluído';
+
+  // Montar resumo
+  let totalAnts = 0;
+  const resumoList = document.getElementById('resumoList');
+  resumoList.innerHTML = '';
+  for (const [idx, alts] of Object.entries(anotacoes)) {
+    if (!alts || alts.length === 0) continue;
+    const dobraName = sessao.dobras[parseInt(idx)]?.titulo || 'Seção ' + (parseInt(idx) + 1);
+    const div = document.createElement('div');
+    div.className = 'resumo-item';
+    div.innerHTML = '<strong>' + dobraName + '</strong>: ' + alts.length + ' alteração(ões)';
+    resumoList.appendChild(div);
+    totalAnts += alts.length;
+  }
+  if (totalAnts > 0) {
+    document.getElementById('resumoCard').style.display = 'block';
   }
 }
 
 function abrirModal(tipo) {
   tipoModal = tipo;
   document.getElementById('modalTitle').textContent = {texto:'💬 Trocar texto',cor:'🎨 Mudar cor',imagem:'🖼️ Trocar imagem',obs:'📝 Observação livre'}[tipo];
-  const textos = sessao.dobras[dobraAtual].textos || [];
+  const textos = dobraAtual !== null ? (sessao.dobras[dobraAtual].textos || []) : [];
   const opts = textos.map(t => '<option value="' + t.replace(/"/g,'&quot;') + '">' + t.substring(0,60) + (t.length>60?'...':'') + '</option>').join('');
   let body = '';
   if (tipo === 'texto') {
@@ -318,7 +389,7 @@ function abrirModal(tipo) {
       '<div><label>Nova cor</label><div class="color-row"><input type="color" class="color-pick" id="m_cpick" value="#f94051" oninput="document.getElementById(\'m_cor\').value=this.value"/>' +
       '<input type="text" id="m_cor" placeholder="#f94051 ou nome da cor" oninput="try{document.getElementById(\'m_cpick\').value=this.value}catch(e){}"/></div></div>';
   } else if (tipo === 'imagem') {
-    body = '<div><label>Descreva a troca</label><textarea id="m_img" rows="4" placeholder="Ex: Trocar a foto por uma imagem de escritório moderno..."></textarea></div>';
+    body = '<div><label>Descreva a troca</label><textarea id="m_img" rows="4" placeholder="Ex: Trocar a foto por uma imagem de escritório moderno com pessoas trabalhando..."></textarea></div>';
   } else {
     body = '<div><label>Sua observação</label><textarea id="m_obs" rows="5" placeholder="Escreva qualquer anotação..."></textarea></div>';
   }
@@ -331,8 +402,8 @@ function fecharModal() { document.getElementById('modal').classList.add('hidden'
 function fecharModalFora(e) { if (e.target === document.getElementById('modal')) fecharModal(); }
 
 function salvarAnotacao() {
-  const dn = dobraAtual + 1;
-  if (!anotacoes[dn]) anotacoes[dn] = [];
+  if (dobraAtual === null) return;
+  if (!anotacoes[dobraAtual]) anotacoes[dobraAtual] = [];
   let alt = null;
   if (tipoModal === 'texto') {
     const de = (document.getElementById('m_de')?.value||'').trim();
@@ -353,14 +424,14 @@ function salvarAnotacao() {
     if (!obs){alert('Escreva sua observação');return;}
     alt = {tipo:'obs',texto:obs};
   }
-  anotacoes[dn].push(alt);
+  anotacoes[dobraAtual].push(alt);
   fecharModal();
   renderAnotacoes();
 }
 
 function renderAnotacoes() {
-  const dn = dobraAtual + 1;
-  const alts = anotacoes[dn] || [];
+  if (dobraAtual === null) return;
+  const alts = anotacoes[dobraAtual] || [];
   const list = document.getElementById('altList');
   const empty = document.getElementById('altEmpty');
   if (empty) empty.style.display = alts.length === 0 ? 'block' : 'none';
@@ -385,40 +456,55 @@ function renderAnotacoes() {
     div.innerHTML = '<button class="alt-del" onclick="removerAlt(' + i + ')">×</button>' + badge + content;
     list.appendChild(div);
   });
+
+  // Botão finalizar na nav quando tem anotações
+  const totalAnotacoes = Object.values(anotacoes).reduce((sum, a) => sum + (a||[]).length, 0);
+  if (totalAnotacoes > 0 && step === 2) {
+    // Mostrar botão extra para finalizar
+    const nav = document.getElementById('navInner');
+    if (!document.getElementById('btnFinalizar')) {
+      // Já tem o botão salvar e voltar, não adicionar de novo
+    }
+  }
 }
 
 function removerAlt(i) {
-  const dn = dobraAtual + 1;
-  anotacoes[dn] = (anotacoes[dn]||[]).filter((_,j) => j !== i);
+  if (dobraAtual === null) return;
+  anotacoes[dobraAtual] = (anotacoes[dobraAtual]||[]).filter((_,j) => j !== i);
   renderAnotacoes();
 }
 
-async function salvarDobra() {
-  const dn = dobraAtual + 1;
-  await fetch('/api/revisar-dobra', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({sessaoId:sessao.id, dobraNumero:dn, revisoes:anotacoes[dn]||[]})
-  });
-}
-
-async function proximaDobra() {
-  await salvarDobra();
-  if (dobraAtual >= sessao.dobras.length - 1) {
-    await fetch('/api/finalizar-revisao', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessaoId:sessao.id})});
-    document.getElementById('view-dobra').classList.add('hidden');
-    document.getElementById('view-final').classList.remove('hidden');
-    document.getElementById('navFixed').style.display = 'none';
-    document.getElementById('progFill').style.width = '100%';
-    return;
+// Verificar se tem anotações para mostrar botão finalizar na step1
+function atualizarNavStep1() {
+  const total = Object.values(anotacoes).reduce((sum, a) => sum + (a||[]).length, 0);
+  const nav = document.getElementById('navInner');
+  if (total > 0) {
+    nav.innerHTML =
+      '<button class="btn-primary green" onclick="finalizar()" style="flex:1">✅ Enviar ' + total + ' alteração(ões)</button>' +
+      '<button class="btn-primary" id="btnMain" ' + (dobraAtual !== null ? '' : 'disabled') + ' onclick="handleMain()" style="flex:2">' +
+      (dobraAtual !== null ? 'Anotar seção selecionada →' : 'Selecione uma seção') +
+      '</button>';
+  } else {
+    nav.innerHTML =
+      '<button class="btn-primary" id="btnMain" ' + (dobraAtual !== null ? '' : 'disabled') + ' onclick="handleMain()" style="flex:1">' +
+      (dobraAtual !== null ? 'Anotar seção selecionada →' : 'Selecione uma seção') +
+      '</button>';
   }
-  dobraAtual++;
-  renderDobra();
 }
 
-async function voltarDobra() {
-  await salvarDobra();
-  if (dobraAtual > 0) { dobraAtual--; renderDobra(); }
-}
+// Override renderSections para atualizar nav
+const _renderSections = renderSections;
+window.renderSections = function() {
+  _renderSections();
+  atualizarNavStep1();
+};
+
+// Override selecionarDobra para atualizar nav
+const _selecionarDobra = selecionarDobra;
+window.selecionarDobra = function(idx) {
+  _selecionarDobra(idx);
+  atualizarNavStep1();
+};
 
 iniciar();
 </script>
